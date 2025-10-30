@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <title>Conversione da Decimale a Binario + Subnet Mask</title>
+  <style>
+    body {
+      font-family: "Segoe UI", Arial, sans-serif;
+      background: linear-gradient(135deg, #eef2f3, #8e9eab);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      margin: 0;
+    }
+
+    h2 {
+      color: #3CB371;
+      margin-bottom: 20px;
+    }
+
+    .container {
+      background: white;
+      padding: 30px 40px;
+      border-radius: 12px;
+      box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
+      text-align: center;
+    }
+
+    input {
+      width: 80px;
+      text-align: center;
+      margin: 8px;
+      padding: 8px;
+      border: 2px solid #ccc;
+      border-radius: 6px;
+      font-size: 16px;
+      transition: 0.3s;
+    }
+
+    input:focus {
+      border-color: #0078d7;
+      outline: none;
+      box-shadow: 0 0 5px rgba(0, 120, 215, 0.5);
+    }
+
+    button {
+      margin-top: 15px;
+      padding: 10px 20px;
+      font-size: 16px;
+      background: #0078d7;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+
+    button:hover {
+      background: #005fa3;
+    }
+
+    #risultato, #subnet {
+      margin-top: 25px;
+      font-weight: bold;
+      font-size: 18px;
+      color: #333;
+      background: #f8f8f8;
+      border-radius: 8px;
+      padding: 10px;
+      box-shadow: inset 0 0 5px rgba(0,0,0,0.1);
+    }
+
+    .ottetto {
+      display: inline-block;
+      margin: 0 5px;
+      padding: 6px 10px;
+      background: #e3f2fd;
+      border-radius: 6px;
+      font-family: "Consolas", monospace;
+    }
+
+    hr {
+      margin: 25px 0;
+      border: 1px solid #ddd;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <h2>Converti numeri decimali in binario</h2>
+    <p>Inserisci quattro numeri interi da 0 a 255:</p>
+
+    <div>
+      <input type="number" id="n1" min="0" max="255">
+      <input type="number" id="n2" min="0" max="255">
+      <input type="number" id="n3" min="0" max="255">
+      <input type="number" id="n4" min="0" max="255">
+    </div>
+
+    <button onclick="converti()">Converti in Binario</button>
+
+    <div id="risultato"></div>
+
+    <hr>
+
+    <h3>Calcola Subnet Mask da Prefix</h3>
+    <p>Inserisci il prefisso (es. 24 per /24):</p>
+    <input type="number" id="prefix" min="0" max="32">
+    <button onclick="calcolaSubnet()">Genera Subnet Mask</button>
+
+    <div id="subnet"></div>
+  </div>
+
+  <script>
+    // Funzione per convertire i 4 numeri decimali in binario
+    function converti() {
+      let numeri = [
+        parseInt(document.getElementById('n1').value),
+        parseInt(document.getElementById('n2').value),
+        parseInt(document.getElementById('n3').value),
+        parseInt(document.getElementById('n4').value)
+      ];
+
+      let binari = [];
+
+      for (let i = 0; i < numeri.length; i++) {
+        let n = numeri[i];
+        if (isNaN(n) || n < 0 || n > 255) {
+          alert("Inserisci solo numeri interi tra 0 e 255!");
+          return;
+        }
+
+        let bin = "";
+        let temp = n;
+        for (let j = 0; j < 8; j++) {
+          bin = (temp % 2) + bin;
+          temp = Math.floor(temp / 2);
+        }
+        binari.push(bin);
+      }
+
+      document.getElementById('risultato').innerHTML =
+        "Risultato in binario:<br><br>" +
+        binari.map(b => `<span class='ottetto'>${b}</span>`).join(" . ");
+    }
+
+    // Funzione per calcolare la subnet mask da prefix
+    function calcolaSubnet() {
+      let prefix = parseInt(document.getElementById('prefix').value);
+
+      if (isNaN(prefix) || prefix < 0 || prefix > 32) {
+        alert("Inserisci un prefisso valido (da 0 a 32)!");
+        return;
+      }
+
+      let ottettiCompleti = Math.floor(prefix / 8);
+      let resto = prefix % 8;
+
+      let binari = [];
+
+      // Crea ottetti completi a 1
+      for (let i = 0; i < ottettiCompleti; i++) {
+        binari.push("11111111");
+      }
+
+      // Crea l’eventuale ottetto parziale
+      if (resto > 0) {
+        let ottetto = "";
+        for (let i = 0; i < 8; i++) {
