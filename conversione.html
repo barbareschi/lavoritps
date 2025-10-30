@@ -2,10 +2,10 @@
 <html lang="it">
 <head>
   <meta charset="UTF-8">
-  <title>Conversione Decimale → Binario</title>
+  <title>Conversione da Decimale a Binario</title>
   <style>
     body {
-      font-family: Arial;
+      font-family: Impact;
       margin: 30px;
     }
     input {
@@ -21,7 +21,7 @@
 </head>
 <body>
 
-  <h2>Converti numeri decimali in binario (0–255)</h2>
+  <h2>Converti numeri decimali in binario (inserire numeri da 0 a 255)</h2>
 
   <input type="number" id="n1" min="0" max="255">
   <input type="number" id="n2" min="0" max="255">
@@ -33,7 +33,7 @@
 
   <script>
     function converti() {
-      // Ottieni i valori dalle caselle di testo
+
       let numeri = [
         parseInt(document.getElementById('n1').value),
         parseInt(document.getElementById('n2').value),
@@ -43,11 +43,9 @@
 
       let binari = [];
 
-      // Ciclo iterativo per convertire ciascun numero in binario a 8 bit
       for (let i = 0; i < numeri.length; i++) {
         let n = numeri[i];
 
-        // Controllo validità
         if (isNaN(n) || n < 0 || n > 255) {
           alert("Inserisci solo numeri interi tra 0 e 255!");
           return;
@@ -56,7 +54,6 @@
         let bin = "";
         let temp = n;
 
-        // Conversione manuale con ciclo (invece di toString(2))
         for (let j = 0; j < 8; j++) {
           bin = (temp % 2) + bin;
           temp = Math.floor(temp / 2);
@@ -65,7 +62,6 @@
         binari.push(bin);
       }
 
-      // Mostra il risultato
       document.getElementById('risultato').innerText =
         "Risultato in binario: " + binari.join(" . ");
     }
