@@ -17,36 +17,30 @@
     function generaSubnetMask() {
       const prefix = parseInt(document.getElementById("prefixInput").value);
       const output = document.getElementById("outputBin");
-
-      // Controlla se l’input è valido
+      
       if (isNaN(prefix) || prefix < 0 || prefix > 32) {
         output.textContent = "Errore: inserisci un numero tra 0 e 32.";
         return;
       }
-
-      // Calcolo: quanti ottetti pieni e quanti bit restano
+      
       const fullOctets = Math.floor(prefix / 8);
       const remainingBits = prefix % 8;
 
       let maskBinary = [];
 
-      // Ottetti con tutti i bit = 1
       for (let i = 0; i < fullOctets; i++) {
         maskBinary.push("11111111");
       }
 
-      // Ottetto con bit rimanenti (es. 11100000)
       if (remainingBits > 0) {
         const partial = "1".repeat(remainingBits).padEnd(8, "0");
         maskBinary.push(partial);
       }
 
-      // Completa con ottetti tutti a 0
       while (maskBinary.length < 4) {
         maskBinary.push("00000000");
       }
 
-      // Mostra il risultato
       output.textContent = maskBinary.join(".");
     }
   </script>
