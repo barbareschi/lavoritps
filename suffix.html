@@ -3,17 +3,112 @@
 <head>
   <meta charset="UTF-8">
   <title>Generatore Subnet Mask</title>
+  <style>
+    body {
+      font-family: "Segoe UI", Arial, sans-serif;
+      background: linear-gradient(135deg, #f0f4ff, #d9e4ff);
+      color: #333;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+
+    .container {
+      background: #fff;
+      padding: 30px 40px;
+      border-radius: 12px;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+      width: 400px;
+      text-align: center;
+    }
+
+    h3 {
+      color: #2c3e50;
+      margin-bottom: 20px;
+      border-bottom: 2px solid #4a90e2;
+      padding-bottom: 10px;
+    }
+
+    label {
+      font-weight: 600;
+      display: block;
+      margin-bottom: 10px;
+    }
+
+    input[type="number"] {
+      width: 80%;
+      padding: 10px;
+      font-size: 16px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      text-align: center;
+      outline: none;
+      transition: border-color 0.3s;
+    }
+
+    input[type="number"]:focus {
+      border-color: #4a90e2;
+    }
+
+    button {
+      margin-top: 15px;
+      background-color: #4a90e2;
+      color: white;
+      border: none;
+      padding: 10px 18px;
+      border-radius: 6px;
+      font-size: 16px;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+
+    button:hover {
+      background-color: #357ab8;
+    }
+
+    p {
+      margin-top: 15px;
+      text-align: left;
+      font-size: 15px;
+      line-height: 1.6;
+    }
+
+    span {
+      color: #1a5276;
+      font-weight: bold;
+    }
+
+    .output {
+      background: #f9f9f9;
+      padding: 10px;
+      border-radius: 8px;
+      margin-top: 10px;
+      border: 1px solid #e1e1e1;
+    }
+
+    .error {
+      color: #d9534f;
+      font-weight: bold;
+    }
+  </style>
 </head>
 <body>
-  <h3>Generatore Subnet Mask in binario</h3>
+  <div class="container">
+    <h3>🔢 Generatore Subnet Mask</h3>
 
-  <label for="prefixInput">Inserisci il prefix number (0–32): </label>
-  <input type="number" id="prefixInput" min="0" max="32">
-  <button onclick="generaSubnetMask()">Genera</button>
+    <label for="prefixInput">Inserisci il prefix number (0–32):</label>
+    <input type="number" id="prefixInput" min="0" max="32" placeholder="es. 24">
+    <br>
+    <button onclick="generaSubnetMask()">Genera</button>
 
-  <p><strong>Subnet mask in binario:</strong> <span id="outputBin"></span></p>
-  <p><strong>Suffix:</strong> <span id="outputSuffix"></span></p>
-  <p><strong>Numero di host:</strong> <span id="outputHosts"></span></p>
+    <div class="output">
+      <p><strong>Subnet mask in binario:</strong> <span id="outputBin"></span></p>
+      <p><strong>Suffix:</strong> <span id="outputSuffix"></span></p>
+      <p><strong>Numero di host:</strong> <span id="outputHosts"></span></p>
+    </div>
+  </div>
 
   <script>
     function generaSubnetMask() {
@@ -21,13 +116,13 @@
       const outputBin = document.getElementById("outputBin");
       const outputSuffix = document.getElementById("outputSuffix");
       const outputHosts = document.getElementById("outputHosts");
- 
+
       outputBin.textContent = "";
       outputSuffix.textContent = "";
       outputHosts.innerHTML = "";
 
       if (isNaN(prefix) || prefix < 0 || prefix > 32) {
-        outputBin.textContent = "Errore: inserisci un numero tra 0 e 32.";
+        outputBin.innerHTML = '<span class="error">❌ Errore: inserisci un numero tra 0 e 32.</span>';
         return;
       }
 
@@ -35,27 +130,22 @@
       const remainingBits = prefix % 8;
       let maskBinary = [];
 
-      for (let i = 0; i < fullOctets; i++) {
-        maskBinary.push("11111111");
-      }
+      for (let i = 0; i < fullOctets; i++) maskBinary.push("11111111");
 
       if (remainingBits > 0) {
         const partial = "1".repeat(remainingBits).padEnd(8, "0");
         maskBinary.push(partial);
       }
 
-      while (maskBinary.length < 4) {
-        maskBinary.push("00000000");
-      }
+      while (maskBinary.length < 4) maskBinary.push("00000000");
 
       outputBin.textContent = maskBinary.join(".");
 
       const suffix = 32 - prefix;
       outputSuffix.textContent = suffix;
-
       const hostCount = Math.pow(2, suffix) - 2;
 
-      outputHosts.innerHTML = `2<sup>${suffix}</sup> - 2 = ${hostCount.toLocaleString()}`;
+      outputHosts.innerHTML = `2<sup>${suffix}</sup> - 2 = <strong>${hostCount.toLocaleString()}</strong>`;
     }
   </script>
 </body>
