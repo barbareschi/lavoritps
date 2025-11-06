@@ -21,19 +21,16 @@
       const outputBin = document.getElementById("outputBin");
       const outputSuffix = document.getElementById("outputSuffix");
       const outputHosts = document.getElementById("outputHosts");
-      
-      // Pulizia campi
+ 
       outputBin.textContent = "";
       outputSuffix.textContent = "";
       outputHosts.innerHTML = "";
 
-      // Controllo validità input
       if (isNaN(prefix) || prefix < 0 || prefix > 32) {
         outputBin.textContent = "Errore: inserisci un numero tra 0 e 32.";
         return;
       }
 
-      // Calcolo maschera binaria
       const fullOctets = Math.floor(prefix / 8);
       const remainingBits = prefix % 8;
       let maskBinary = [];
@@ -51,17 +48,13 @@
         maskBinary.push("00000000");
       }
 
-      // Mostra la maschera binaria
       outputBin.textContent = maskBinary.join(".");
 
-      // Calcolo del suffix
       const suffix = 32 - prefix;
       outputSuffix.textContent = suffix;
 
-      // Calcolo del numero di host (2^suffix - 2)
       const hostCount = Math.pow(2, suffix) - 2;
 
-      // Mostra il calcolo con tag <sup>
       outputHosts.innerHTML = `2<sup>${suffix}</sup> - 2 = ${hostCount.toLocaleString()}`;
     }
   </script>
