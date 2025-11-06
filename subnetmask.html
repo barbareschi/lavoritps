@@ -1,0 +1,51 @@
+function prefixToSubnetMask(prefix) {
+  // Controlla che il prefisso sia valido
+  if (prefix < 0 || prefix > 32) {
+    return "Prefisso non valido (deve essere tra 0 e 32)";
+  }
+
+  // Calcola quanti ottetti sono completamente pieni
+  const fullOctets = Math.floor(prefix / 8);
+  // Calcola quanti bit restano da mettere a 1 nell'ottetto successivo
+  const remainingBits = prefix % 8;
+
+  let maskBinary = [];
+  let maskDecimal = [];
+
+  // Aggiunge gli ottetti pieni (11111111 = 255)
+  for (let i = 0; i < fullOctets; i++) {
+    maskBinary.push("11111111");
+    maskDecimal.push(255);
+  }
+
+  // Se ci sono bit rimanenti, crea un ottetto parziale
+  if (remainingBits > 0) {
+    const partialBinary = "1".repeat(remainingBits).padEnd(8, "0");
+    maskBinary.push(partialBinary);
+    // Converte l’ottetto binario in decimale
+    maskDecimal.push(parseInt(partialBinary, 2));
+  }
+
+  // Completa con ottetti vuoti (00000000 = 0)
+  while (maskBinary.length < 4) {
+    maskBinary.push("00000000");
+    maskDecimal.push(0);
+  }
+
+  return {
+    prefix: prefix,
+    binaryMask: maskBinary.join("."),
+    decimalMask: maskDecimal.join(".")
+  };
+}
+
+// 🔍 Esempi di test
+console.log(prefixToSubnetMask(24));
+// { prefix: 24,
+//   binaryMask: '11111111.11111111.11111111.00000000',
+//   decimalMask: '255.255.255.0' }
+
+console.log(prefixToSubnetMask(19));
+// { prefix: 19,
+//   binaryMask: '11111111.11111111.11100000.00000000',
+//   decimalMask: '255.255.224.0' }
