@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <title>Anagrafica Utente</title>
+  <style>
+ body {
+      font-family: Arial, sans-serif;
+      background-color: #f8f9fa;
+      padding: 40px;
+      display: flex;
+      justify-content: center;
+    }
+
+    form {
+      background: white;
+      padding: 25px 40px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      width: 450px;
+    }
+
+    h1 {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    .campo {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 12px;
+    }
+
+  </style>
+</head>
+<body>
+
+<form id="anagraficaForm" autocomplete="off">
+  <h1>Anagrafica Utente</h1>
+
+  <div class="campo">
+    <label for="nome">Nome:</label>
+    <input type="text" id="nome" required>
+  </div>
+
+  <div class="campo">
+    <label for="cognome">Cognome:</label>
+    <input type="text" id="cognome" required>
+  </div>
+
+  <div class="campo">
+    <label for="indirizzo">Indirizzo:</label>
+    <input type="text" id="indirizzo" required>
+  </div>
+
+  <div class="campo">
+    <label for="citta">Città:</label>
+    <input type="text" id="citta" required>
+  </div>
+
+  <div class="campo">
+    <label for="cap">CAP:</label>
+    <input type="text" id="cap" pattern="[0-9]{5}" required title="Inserisci un CAP valido di 5 cifre">
+  </div>
+
+  <div class="campo">
+    <label for="dataNascita">Data di nascita:</label>
+    <input 
+      type="text" 
+      id="dataNascita" 
+      placeholder="gg/mm/aaaa" 
+      maxlength="10" 
+      required 
+      autocomplete="off" 
+      onpaste="return false"
+      ondrop="return false"
+      onkeydown="limitaInputData(event)"
+    >
+  </div>
+
+  <div class="radio-group">
+    <label><strong>Sesso:</strong></label><br>
+    <input type="radio" name="sesso" value="Maschio" required> Maschio<br>
+    <input type="radio" name="sesso" value="Femmina"> Femmina<br>
+    <input type="radio" name="sesso" value="Non specificare"> Non specificare
+  </div>
+
+  <div class="checkbox-group">
+    <label><strong>Mezzi di trasporto posseduti:</strong></label><br>
+    <input type="checkbox" name="mezzo" value="Bici"> Ho una bici<br>
+    <input type="checkbox" name="mezzo" value="Auto"> Ho un'auto<br>
+    <input type="checkbox" name="mezzo" value="Moto"> Ho una moto
+  </div>
+
+  <div class="select-group">
+    <label><strong>Seleziona provincia:</strong></label><br>
+    <select name="provincia" multiple="multiple" style="width: 100%; height: 100px;">
+      <option value="RM">Roma</option>
+      <option value="NA">Napoli</option>
+      <option value="TO">Torino</option>
+      <option value="MI">Milano</option>
+      <option value="PV">Pavia</option>
+      <option value="VA">Varese</option>
+      <option value="CR">Cremona</option>
+      <option value="IS">Isernia</option>
+    </select>
+    <input type="button" onclick="selezionaProvince()" value="Invia provincia" style="margin-top: 5px;">
+  </div>
+
+  <button type="button" onclick="generazione()">Genera Informazioni</button>
+
+  <div id="risultato"></div>
+</form>
+
+<script>
+  function limitaInputData(e) {
+    const key = e.key;
+    const consentiti = "0123456789/";
+    const input = e.target.value;
+    if (!consentiti.includes(key) && key !== "Backspace" && key !== "Tab" && key !== "ArrowLeft" && key !== "ArrowRight" && key !== "Delete") {
+      e.preventDefault();
+    }
+    if ((input.length === 2 || input.length === 5) && key !== "Backspace" && key !== "/") {
+      e.target.value += "/";
+    }
+  }
+
+  function generazione() {
+    const nome = document.getElementById('nome').value.trim();
+    const cognome = document.getElementById('cognome').value.trim();
+    const indirizzo = document.getElementById('indirizzo').value.trim();
+    const citta = document.getElementById('citta').value.trim();
+    const cap = document.getElementById('cap').value.trim();
+    const dataInput = document.getElementById('dataNascita').value.trim();
+
+    const patternData = /^([0-2][0-9]|3[01])\/(0[1-9]|1[0-2])\/(19|20)\d{2}$/;
+    if (!patternData.test(dataInput)) {
+      alert("Inserisci la data nel formato corretto: gg/mm/aaaa");
+      return;
+    }
+
+    const [giorno, mese, anno] = dataInput.split('/').map(Number);
+    const oggi = new Date();
+    let eta = oggi.getFullYear() - anno;
+    const m = oggi.getMonth() - (mese - 1);
+    if (m < 0 || (m === 0 && oggi.getDate() < giorno)) eta--;
+
+    const sessoSelezionato = document.querySelector('input[name="sesso"]:checked');
+    const sesso = sessoSelezionato ? sessoSelezionato.value : 'Non specificato';
+
+    const mezzi = Array.from(document.querySelectorAll('input[name="mezzo"]:checked')).map(cb => cb.value);
+    const mezziPosseduti = mezzi.length > 0 ? mezzi.join(", ") : "Nessuno";
+
+    let generazione = '';
+    if (anno >= 2013) generazione = 'Generazione Alpha';
+    else if (anno >= 1997) generazione = 'Generazione Z';
+    else if (anno >= 1981) generazione = 'Millennials';
+    else if (anno >= 1965) generazione = 'Generazione X';
+    else if (anno >= 1946) generazione = 'Baby Boomers';
+    else if (anno >= 1928) generazione = 'Generazione Silenziosa';
+    else if (anno >= 1901) generazione = 'Greatest Generation';
+    else generazione = 'Non classificata';
+
+    document.getElementById('risultato').innerHTML = `
+      <p><strong>${nome} ${cognome}</strong><br>
+      Età: ${eta} anni<br>
+      Sesso: ${sesso}<br>
+      Generazione: ${generazione}<br>
+      Mezzi posseduti: ${mezziPosseduti}</p>
+    `;
+  }
+
+  function selezionaProvince() {
+    const select = document.forms["anagraficaForm"].provincia;
+    const selected = [];
+    for (let i = 0; i < select.options.length; i++) {
+      if (select.options[i].selected) selected.push(select.options[i].value);
+    }
+    if (selected.length > 0) {
+      document.location.href = "ricezione.html?prov=" + selected.join(",");
+    } else {
+      alert("Seleziona almeno una provincia!");
+    }
+  }
+</script>
+
+</body>
+</html>
+
