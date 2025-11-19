@@ -92,6 +92,16 @@
     <input type="checkbox" name="mezzo" value="Auto"> Ho un'auto<br>
     <input type="checkbox" name="mezzo" value="Moto"> Ho una moto
   </div>
+  
+    <div class="radio-group">
+    <label><strong>Sport:</strong></label><br>
+    <input type="radio" name="sport" value="Calcio" required> Calcio<br>
+    <input type="radio" name="sport" value="Basket"> Basket<br>
+    <input type="radio" name="sport" value="Golf"> Golf<br>
+    <input type="radio" name="sport" value="Hockey"> Hockey<br>
+    <input type="radio" name="sport" value="Football"> Football<br>
+    <input type="radio" name="sport" value="Altro"> Altro<br>
+  </div>
 
   <div class="select-group">
     <label><strong>Seleziona provincia:</strong></label><br>
@@ -152,22 +162,36 @@
     const mezzi = Array.from(document.querySelectorAll('input[name="mezzo"]:checked')).map(cb => cb.value);
     const mezziPosseduti = mezzi.length > 0 ? mezzi.join(", ") : "Nessuno";
 
-    let generazione = '';
-    if (anno >= 2013) generazione = 'Generazione Alpha';
-    else if (anno >= 1997) generazione = 'Generazione Z';
-    else if (anno >= 1981) generazione = 'Millennials';
-    else if (anno >= 1965) generazione = 'Generazione X';
-    else if (anno >= 1946) generazione = 'Baby Boomers';
-    else if (anno >= 1928) generazione = 'Generazione Silenziosa';
-    else if (anno >= 1901) generazione = 'Greatest Generation';
-    else generazione = 'Non classificata';
+    let generazioneTesto = '';
+    if (anno >= 2013) generazioneTesto = 'Generazione Alpha';
+    else if (anno >= 1997) generazioneTesto = 'Generazione Z';
+    else if (anno >= 1981) generazioneTesto = 'Millennials';
+    else if (anno >= 1965) generazioneTesto = 'Generazione X';
+    else if (anno >= 1946) generazioneTesto = 'Baby Boomers';
+    else if (anno >= 1928) generazioneTesto = 'Generazione Silenziosa';
+    else if (anno >= 1901) generazioneTesto = 'Greatest Generation';
+    else generazioneTesto = 'Non classificata';
+
+    const select = document.forms["anagraficaForm"].provincia;
+    const province = [];
+    for (let i = 0; i < select.options.length; i++) {
+      if (select.options[i].selected) province.push(select.options[i].value);
+    }
+    const provinceFinali = province.length > 0 ? province.join(", ") : "Nessuna";
 
     document.getElementById('risultato').innerHTML = `
-      <p><strong>${nome} ${cognome}</strong><br>
-      Età: ${eta} anni<br>
-      Sesso: ${sesso}<br>
-      Generazione: ${generazione}<br>
-      Mezzi posseduti: ${mezziPosseduti}</p>
+      <p>
+        <strong>${nome} ${cognome}</strong><br>
+        <strong>Indirizzo:</strong> ${indirizzo}<br>
+        <strong>Città:</strong> ${citta}<br>
+        <strong>CAP:</strong> ${cap}<br>
+        <strong>Data di nascita:</strong> ${dataInput}<br>
+        <strong>Età:</strong> ${eta} anni<br>
+        <strong>Sesso:</strong> ${sesso}<br>
+        <strong>Generazione:</strong> ${generazioneTesto}<br>
+        <strong>Mezzi posseduti:</strong> ${mezziPosseduti}<br>
+        <strong>Province selezionate:</strong> ${provinceFinali}
+      </p>
     `;
   }
 
@@ -187,4 +211,3 @@
 
 </body>
 </html>
-
