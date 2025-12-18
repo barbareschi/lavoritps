@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <title>Calcolatrice</title>
+</head>
+<body>
+
+<h3>Calcolatrice</h3>
+
+<input type="text" id="display" disabled>
+<br><br>
+
+<button onclick="inserisci('7')">7</button>
+<button onclick="inserisci('8')">8</button>
+<button onclick="inserisci('9')">9</button>
+<button onclick="inserisci('+')">+</button>
+<br>
+
+<button onclick="inserisci('4')">4</button>
+<button onclick="inserisci('5')">5</button>
+<button onclick="inserisci('6')">6</button>
+<button onclick="inserisci('-')">-</button>
+<br>
+
+<button onclick="inserisci('1')">1</button>
+<button onclick="inserisci('2')">2</button>
+<button onclick="inserisci('3')">3</button>
+<button onclick="inserisci('*')">*</button>
+<br>
+
+<button onclick="inserisci('0')">0</button>
+<button onclick="inserisci('.')">.</button>
+<button onclick="calcola()">=</button>
+<button onclick="inserisci('/')">/</button>
+<br><br>
+
+<button onclick="radice()">√</button>
+<button onclick="potenza()">X^2</button>
+<button onclick="percentuale()">%</button>
+<button onclick="cancella()">C</button>
+<br>
+
+<button onclick="seno()">sin</button>
+<button onclick="coseno()">cos</button>
+<button onclick="tangente()">tan</button>
+<br><br>
+
+<script>
+  
+    let vettore = [];
+
+    function aggiornaDisplay() {
+        document.getElementById("display").value = vettore.join("");
+    }
+
+    function inserisci(valore) {
+        vettore.push(valore);
+        aggiornaDisplay();
+    }
+
+    function cancella() {
+        vettore = [];
+        aggiornaDisplay();
+    }
+
+    function calcola() {
+       
+        let espressione = vettore.join("");
+
+       
+        let risultato = eval(espressione);
+
+        vettore = [risultato];
+        aggiornaDisplay();
+    }
+
+   
+    function radice() {
+        let valore = parseFloat(vettore.join(""));
+        vettore = [Math.sqrt(valore)];
+        aggiornaDisplay();
+    }
+
+    function potenza() {
+        let valore = parseFloat(vettore.join(""));
+        vettore = [Math.pow(valore, 2)];
+        aggiornaDisplay();
+    }
+
+    function percentuale() {
+        let valore = parseFloat(vettore.join(""));
+        vettore = [valore / 100];
+        aggiornaDisplay();
+    }
+    
+    function seno() {
+    	let valore = parseFloat(vettore.join(""));
+    	let radianti = valore * Math.PI / 180;
+    	vettore = [Math.sin(radianti)];
+    	aggiornaDisplay();
+	}
+
+	function coseno() {
+    	let valore = parseFloat(vettore.join(""));
+    	let radianti = valore * Math.PI / 180;
+    	vettore = [Math.cos(radianti)];
+    	aggiornaDisplay();
+	}
+
+	function tangente() {
+  		let valore = parseFloat(vettore.join(""));
+    	let radianti = valore * Math.PI / 180;
+    	vettore = [Math.tan(radianti)];
+    	aggiornaDisplay();
+	}
+
+</script>
+
+</body>
+</html>
+
