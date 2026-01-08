@@ -8,115 +8,134 @@
 
 <h3>Calcolatrice</h3>
 
-<input type="text" id="display" disabled>
+<input type="text" id="display" value="0" disabled>
 <br><br>
 
-<button onclick="inserisci('7')">7</button>
-<button onclick="inserisci('8')">8</button>
-<button onclick="inserisci('9')">9</button>
-<button onclick="inserisci('+')">+</button>
-<br>
+<button onclick="aggiungi('7')">7</button>
+<button onclick="aggiungi('8')">8</button>
+<button onclick="aggiungi('9')">9</button>
+<button onclick="aggiungi('+')">+</button><br>
 
-<button onclick="inserisci('4')">4</button>
-<button onclick="inserisci('5')">5</button>
-<button onclick="inserisci('6')">6</button>
-<button onclick="inserisci('-')">-</button>
-<br>
+<button onclick="aggiungi('4')">4</button>
+<button onclick="aggiungi('5')">5</button>
+<button onclick="aggiungi('6')">6</button>
+<button onclick="aggiungi('-')">-</button><br>
 
-<button onclick="inserisci('1')">1</button>
-<button onclick="inserisci('2')">2</button>
-<button onclick="inserisci('3')">3</button>
-<button onclick="inserisci('*')">*</button>
-<br>
+<button onclick="aggiungi('1')">1</button>
+<button onclick="aggiungi('2')">2</button>
+<button onclick="aggiungi('3')">3</button>
+<button onclick="aggiungi('*')">*</button><br>
 
-<button onclick="inserisci('0')">0</button>
-<button onclick="inserisci('.')">.</button>
+<button onclick="aggiungi('0')">0</button>
+<button onclick="aggiungi('.')">.</button>
 <button onclick="calcola()">=</button>
-<button onclick="inserisci('/')">/</button>
-<br><br>
+<button onclick="aggiungi('/')">/</button><br><br>
 
 <button onclick="radice()">√</button>
-<button onclick="potenza()">X^2</button>
+<button onclick="aggiungi('^')">xʸ</button>
 <button onclick="percentuale()">%</button>
-<button onclick="cancella()">C</button>
-<br>
+<button onclick="cancella()">C</button><br>
 
-<button onclick="seno()">sin</button>
-<button onclick="coseno()">cos</button>
-<button onclick="tangente()">tan</button>
-<br><br>
+<button onclick="sin()">sin</button>
+<button onclick="cos()">cos</button>
+<button onclick="tan()">tan</button>
 
 <script>
-  
-    let vettore = [];
+var schermo = document.getElementById("display");
+var memoriaValore = 0;
 
-    function aggiornaDisplay() {
-        document.getElementById("display").value = vettore.join("");
+function aggiungi(valore) {
+    if (schermo.value === "0") {
+        schermo.value = valore;
+    } else {
+        schermo.value += valore;
+    }
+}
+
+function cancella() {
+    schermo.value = "0";
+}
+
+function percentuale() {
+    schermo.value = parseFloat(schermo.value) / 100;
+}
+
+function sin() {
+    let n = parseFloat(schermo.value);
+    schermo.value = Math.sin(n * Math.PI / 180);
+}
+
+function cos() {
+    let n = parseFloat(schermo.value);
+    schermo.value = Math.cos(n * Math.PI / 180);
+}
+
+function tan() {
+    let n = parseFloat(schermo.value);
+    schermo.value = Math.tan(n * Math.PI / 180);
+}
+
+function radice() {
+    let n = parseFloat(schermo.value);
+    schermo.value = Math.sqrt(n);
+}
+
+function memorizza() {
+    memoriaValore = parseFloat(schermo.value);
+}
+
+function richiamamemoria() {
+    schermo.value = memoriaValore;
+}
+
+function calcola() {
+    let testo = schermo.value;
+    let elementi = [];
+    let numero = "";
+
+    for (let i = 0; i < testo.length; i++) {
+        let c = testo[i];
+        if ((c >= '0' && c <= '9') || c === '.') {
+            numero += c;
+        } else {
+            elementi.push(numero);
+            elementi.push(c);
+            numero = "";
+        }
+    }
+    elementi.push(numero);
+
+    for (let i = 1; i < elementi.length; i += 2) {
+        if (elementi[i] === '^') {
+            let a = parseFloat(elementi[i - 1]);
+            let b = parseFloat(elementi[i + 1]);
+            let r = Math.pow(a, b);
+            elementi.splice(i - 1, 3, r.toString());
+            i -= 2;
+        }
     }
 
-    function inserisci(valore) {
-        vettore.push(valore);
-        aggiornaDisplay();
+    for (let i = 1; i < elementi.length; i += 2) {
+        if (elementi[i] === '*' || elementi[i] === '/') {
+            let a = parseFloat(elementi[i - 1]);
+            let b = parseFloat(elementi[i + 1]);
+            let r = (elementi[i] === '*') ? a * b : a / b;
+            elementi.splice(i - 1, 3, r.toString());
+            i -= 2;
+        }
     }
 
-    function cancella() {
-        vettore = [];
-        aggiornaDisplay();
+    for (let i = 1; i < elementi.length; i += 2) {
+        let a = parseFloat(elementi[i - 1]);
+        let b = parseFloat(elementi[i + 1]);
+        let r = (elementi[i] === '+') ? a + b : a - b;
+        elementi.splice(i - 1, 3, r.toString());
+        i -= 2;
     }
 
-    function calcola() {
-       
-        let espressione = vettore.join("");
-
-       
-        let risultato = eval(espressione);
-
-        vettore = [risultato];
-        aggiornaDisplay();
-    }
-
-   
-    function radice() {
-        let valore = parseFloat(vettore.join(""));
-        vettore = [Math.sqrt(valore)];
-        aggiornaDisplay();
-    }
-
-    function potenza() {
-        let valore = parseFloat(vettore.join(""));
-        vettore = [Math.pow(valore, 2)];
-        aggiornaDisplay();
-    }
-
-    function percentuale() {
-        let valore = parseFloat(vettore.join(""));
-        vettore = [valore / 100];
-        aggiornaDisplay();
-    }
-    
-    function seno() {
-    	let valore = parseFloat(vettore.join(""));
-    	let radianti = valore * Math.PI / 180;
-    	vettore = [Math.sin(radianti)];
-    	aggiornaDisplay();
-	}
-
-	function coseno() {
-    	let valore = parseFloat(vettore.join(""));
-    	let radianti = valore * Math.PI / 180;
-    	vettore = [Math.cos(radianti)];
-    	aggiornaDisplay();
-	}
-
-	function tangente() {
-  		let valore = parseFloat(vettore.join(""));
-    	let radianti = valore * Math.PI / 180;
-    	vettore = [Math.tan(radianti)];
-    	aggiornaDisplay();
-	}
-
+    schermo.value = elementi[0];
+}
 </script>
 
 </body>
 </html>
-
