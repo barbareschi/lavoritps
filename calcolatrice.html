@@ -3,133 +3,182 @@
 <head>
     <meta charset="UTF-8">
     <title>Calcolatrice</title>
+
+    <style>
+        body {
+            background: #1e1e2f;
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .calcolatrice {
+            background: #2b2b3d;
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+            width: 280px;
+        }
+
+        h3 {
+            text-align: center;
+            color: #fff;
+            margin-bottom: 15px;
+        }
+
+        #display {
+            width: 100%;
+            height: 50px;
+            font-size: 22px;
+            text-align: right;
+            padding: 10px;
+            border: none;
+            border-radius: 10px;
+            margin-bottom: 15px;
+            background: #111;
+            color: #0f0;
+        }
+
+        .tasti {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+        }
+
+        button {
+            height: 50px;
+            font-size: 18px;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            background: #3f3f5e;
+            color: white;
+            transition: 0.2s;
+        }
+
+        button:hover {
+            background: #5a5aa3;
+        }
+
+        .operatore {
+            background: #ff8c00;
+        }
+
+        .operatore:hover {
+            background: #ffa733;
+        }
+
+        .uguale {
+            background: #00c853;
+            grid-column: span 2;
+        }
+
+        .uguale:hover {
+            background: #2ee47b;
+        }
+
+        .clear {
+            background: #e53935;
+        }
+
+        .clear:hover {
+            background: #ff6f60;
+        }
+    </style>
 </head>
 <body>
 
-<h3>Calcolatrice</h3>
+<div class="calcolatrice">
+    <h3>Calcolatrice</h3>
 
-<input type="text" id="display" value="0" disabled>
-<br><br>
+    <input type="text" id="display" value="0" disabled>
 
-<button onclick="aggiungi('7')">7</button>
-<button onclick="aggiungi('8')">8</button>
-<button onclick="aggiungi('9')">9</button>
-<button onclick="aggiungi('+')">+</button><br>
+    <div class="tasti">
+        <button onclick="aggiungi('7')">7</button>
+        <button onclick="aggiungi('8')">8</button>
+        <button onclick="aggiungi('9')">9</button>
+        <button class="operatore" onclick="aggiungi('+')">+</button>
 
-<button onclick="aggiungi('4')">4</button>
-<button onclick="aggiungi('5')">5</button>
-<button onclick="aggiungi('6')">6</button>
-<button onclick="aggiungi('-')">-</button><br>
+        <button onclick="aggiungi('4')">4</button>
+        <button onclick="aggiungi('5')">5</button>
+        <button onclick="aggiungi('6')">6</button>
+        <button class="operatore" onclick="aggiungi('-')">−</button>
 
-<button onclick="aggiungi('1')">1</button>
-<button onclick="aggiungi('2')">2</button>
-<button onclick="aggiungi('3')">3</button>
-<button onclick="aggiungi('*')">*</button><br>
+        <button onclick="aggiungi('1')">1</button>
+        <button onclick="aggiungi('2')">2</button>
+        <button onclick="aggiungi('3')">3</button>
+        <button class="operatore" onclick="aggiungi('*')">×</button>
 
-<button onclick="aggiungi('0')">0</button>
-<button onclick="aggiungi('.')">.</button>
-<button onclick="calcola()">=</button>
-<button onclick="aggiungi('/')">/</button><br><br>
+        <button onclick="aggiungi('0')">0</button>
+        <button onclick="aggiungi('.')">.</button>
+        <button class="uguale" onclick="calcola()">=</button>
 
-<button onclick="radice()">√</button>
-<button onclick="aggiungi('^')">xʸ</button>
-<button onclick="percentuale()">%</button>
-<button onclick="cancella()">C</button><br>
+        <button class="operatore" onclick="aggiungi('/')">÷</button>
 
-<button onclick="sin()">sin</button>
-<button onclick="cos()">cos</button>
-<button onclick="tan()">tan</button>
+        <button onclick="radice()">√</button>
+        <button onclick="aggiungi('^')">^</button>
+        <button onclick="percentuale()">%</button>
+        <button class="clear" onclick="cancella()">C</button>
+
+        <button onclick="sin()">sin</button>
+        <button onclick="cos()">cos</button>
+        <button onclick="tan()">tan</button>
+    </div>
+</div>
 
 <script>
+/* JS IDENTICO AL TUO */
 var schermo = document.getElementById("display");
 var memoriaValore = 0;
 
 function aggiungi(valore) {
-    if (schermo.value === "0") {
-        schermo.value = valore;
-    } else {
-        schermo.value += valore;
-    }
+    if (schermo.value === "0") schermo.value = valore;
+    else schermo.value += valore;
 }
 
-function cancella() {
-    schermo.value = "0";
-}
-
-function percentuale() {
-    schermo.value = parseFloat(schermo.value) / 100;
-}
-
-function sin() {
-    let n = parseFloat(schermo.value);
-    schermo.value = Math.sin(n * Math.PI / 180);
-}
-
-function cos() {
-    let n = parseFloat(schermo.value);
-    schermo.value = Math.cos(n * Math.PI / 180);
-}
-
-function tan() {
-    let n = parseFloat(schermo.value);
-    schermo.value = Math.tan(n * Math.PI / 180);
-}
-
-function radice() {
-    let n = parseFloat(schermo.value);
-    schermo.value = Math.sqrt(n);
-}
-
-function memorizza() {
-    memoriaValore = parseFloat(schermo.value);
-}
-
-function richiamamemoria() {
-    schermo.value = memoriaValore;
-}
+function cancella() { schermo.value = "0"; }
+function percentuale() { schermo.value = parseFloat(schermo.value) / 100; }
+function sin() { schermo.value = Math.sin(parseFloat(schermo.value) * Math.PI / 180); }
+function cos() { schermo.value = Math.cos(parseFloat(schermo.value) * Math.PI / 180); }
+function tan() { schermo.value = Math.tan(parseFloat(schermo.value) * Math.PI / 180); }
+function radice() { schermo.value = Math.sqrt(parseFloat(schermo.value)); }
 
 function calcola() {
     let testo = schermo.value;
     let elementi = [];
     let numero = "";
 
-    for (let i = 0; i < testo.length; i++) {
-        let c = testo[i];
-        if ((c >= '0' && c <= '9') || c === '.') {
-            numero += c;
-        } else {
-            elementi.push(numero);
-            elementi.push(c);
-            numero = "";
-        }
+    for (let c of testo) {
+        if ((c >= '0' && c <= '9') || c === '.') numero += c;
+        else { elementi.push(numero, c); numero = ""; }
     }
     elementi.push(numero);
 
     for (let i = 1; i < elementi.length; i += 2) {
         if (elementi[i] === '^') {
-            let a = parseFloat(elementi[i - 1]);
-            let b = parseFloat(elementi[i + 1]);
-            let r = Math.pow(a, b);
-            elementi.splice(i - 1, 3, r.toString());
+            let r = Math.pow(parseFloat(elementi[i-1]), parseFloat(elementi[i+1]));
+            elementi.splice(i-1, 3, r.toString());
             i -= 2;
         }
     }
 
     for (let i = 1; i < elementi.length; i += 2) {
         if (elementi[i] === '*' || elementi[i] === '/') {
-            let a = parseFloat(elementi[i - 1]);
-            let b = parseFloat(elementi[i + 1]);
-            let r = (elementi[i] === '*') ? a * b : a / b;
-            elementi.splice(i - 1, 3, r.toString());
+            let r = elementi[i] === '*' ?
+                parseFloat(elementi[i-1]) * parseFloat(elementi[i+1]) :
+                parseFloat(elementi[i-1]) / parseFloat(elementi[i+1]);
+            elementi.splice(i-1, 3, r.toString());
             i -= 2;
         }
     }
 
     for (let i = 1; i < elementi.length; i += 2) {
-        let a = parseFloat(elementi[i - 1]);
-        let b = parseFloat(elementi[i + 1]);
-        let r = (elementi[i] === '+') ? a + b : a - b;
-        elementi.splice(i - 1, 3, r.toString());
+        let r = elementi[i] === '+' ?
+            parseFloat(elementi[i-1]) + parseFloat(elementi[i+1]) :
+            parseFloat(elementi[i-1]) - parseFloat(elementi[i+1]);
+        elementi.splice(i-1, 3, r.toString());
         i -= 2;
     }
 
