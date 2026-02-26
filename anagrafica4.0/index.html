@@ -131,7 +131,8 @@ function salva() {
 
     elenco.push(persona);
     localStorage.setItem("elenco", JSON.stringify(elenco));
- 
+
+    // RESET CAMPI
     document.getElementById("nome").value = "";
     document.getElementById("cognome").value = "";
     document.getElementById("nascita").value = "";
@@ -158,4 +159,3 @@ function svuota() {
 
 </body>
 </html>
-
