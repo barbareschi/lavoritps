@@ -99,7 +99,7 @@ CAP:<br>
 let elenco = [];
 let regexNome = /^[\p{Script=Latin}\s]+$/u;
 let regexCognome = /^[\p{Script=Latin}\s]+$/u;
-let regexCap = /^[0-9]+$/;
+let regexCap = /^[0-9]{1,5}$/;
 let regexEmail = /^[^\s@]+@[^\s@]+\.[A-Za-z]{2,6}$/;
 
 function salva() {
@@ -133,6 +133,9 @@ function salva() {
         alert("Email non valida");
         return;
     }
+
+    if (!regexCap.test(cap)) {
+    alert("Il CAP deve contenere massimo 5 numeri!");
 
     let persona = {
         nome: nome,
