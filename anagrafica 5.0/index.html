@@ -97,6 +97,7 @@ CAP:<br>
 
 <script>
 let elenco = [];
+
 let regexNome = /^[\p{Script=Latin}\s]+$/u;
 let regexCognome = /^[\p{Script=Latin}\s]+$/u;
 let regexCap = /^[0-9]{1,5}$/;
@@ -125,7 +126,7 @@ function salva() {
     }
 
     if (!regexCap.test(cap)) {
-        alert("CAP non valido, massimo 5 lettere");
+        alert("CAP non valido, massimo 5 numeri");
         return;
     }
 
@@ -189,6 +190,7 @@ function salva() {
 
 function svuota() {
     localStorage.removeItem("elenco");
+}
 }
 </script>
 
