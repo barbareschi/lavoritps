@@ -5,21 +5,15 @@
 <title>Tabella CSV</title>
 
 <style>
-
 table{
-border-collapse: collapse;
-width:100%;
+    border-collapse: collapse;
+    width:100%;
 }
 
 td{
-border:1px solid black;
-padding:6px;
+    border:1px solid black;
+    padding:6px;
 }
-
-button{
-margin-bottom:15px;
-}
-
 </style>
 
 </head>
@@ -28,31 +22,25 @@ margin-bottom:15px;
 
 <h2>Tabella CSV</h2>
 
-<button onclick="window.print()">Stampa</button>
-
 <table id="tabella"></table>
 
 <script>
-
 const dati = JSON.parse(localStorage.getItem("csvData"));
 const tabella = document.getElementById("tabella");
 
-for(let i=0;i<dati.length;i++){
-
-    let tr = document.createElement("tr");
-
-    for(let j=0;j<dati[i].length;j++){
-
-        let td = document.createElement("td");
-        td.textContent = dati[i][j];
-
-        tr.appendChild(td);
-
+if(dati){
+    for(let i=0;i<dati.length;i++){
+        let tr = document.createElement("tr");
+        for(let j=0;j<dati[i].length;j++){
+            let td = document.createElement("td");
+            td.textContent = dati[i][j];
+            tr.appendChild(td);
+        }
+        tabella.appendChild(tr);
     }
-
-    tabella.appendChild(tr);
+} else {
+    tabella.innerHTML = "<tr><td>Nessun dato CSV trovato</td></tr>";
 }
-
 </script>
 
 </body>
