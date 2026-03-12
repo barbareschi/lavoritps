@@ -24,12 +24,10 @@ document.getElementById("fileInput").addEventListener("change", function () {
     const reader = new FileReader();
 
     reader.onload = function(e) {
-
         const testo = e.target.result;
         dati = parseCSV(testo);
 
         localStorage.setItem("csvData", JSON.stringify(dati));
-
     };
 
     reader.readAsText(file);
@@ -37,21 +35,16 @@ document.getElementById("fileInput").addEventListener("change", function () {
 });
 
 function parseCSV(testo){
-
     const righe = testo.trim().split("\n");
     let risultato = [];
-
     for(let i=0;i<righe.length;i++){
         risultato.push(righe[i].split(","));
     }
-
     return risultato;
 }
 
 function apriTabella(){
-
     window.open("destinatario.html");
-
 }
 
 </script>
