@@ -3,18 +3,67 @@
 <head>
   <meta charset="UTF-8">
   <title>Archivio CSV</title>
-  <link rel="stylesheet" href="style.css">
+
+  <style>
+    body {
+      font-family: system-ui, -apple-system, sans-serif;
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      margin: 0;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      color: #333;
+    }
+
+    h1 {
+      color: white;
+      margin-bottom: 20px;
+    }
+
+    #box-caricamento {
+      background: white;
+      padding: 25px;
+      border-radius: 15px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+      margin-bottom: 20px;
+      text-align: center;
+    }
+
+    input[type="file"] {
+      margin-top: 10px;
+      padding: 8px;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+      cursor: pointer;
+    }
+
+    #output {
+      background: rgba(0,0,0,0.85);
+      color: #00ffcc;
+      padding: 20px;
+      width: 90%;
+      max-width: 900px;
+      height: 300px;
+      overflow-y: auto;
+      border-radius: 12px;
+      font-family: monospace;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+    }
+  </style>
+
 </head>
 <body>
 
   <h1>Lettore file CSV</h1>
   
   <div id="box-caricamento">
-    <h2>scegli il file .csv</h2>
+    <h2>Scegli il file .csv</h2>
     <input type="file" id="fileInput" accept=".csv">
   </div>
 
-  <pre id="output">dopo che avrai scelto il file, qui sotto apparirà il testo</pre>
+  <pre id="output">Dopo che avrai scelto il file, qui apparirà il testo</pre>
 
   <script>
     const fileInput = document.getElementById("fileInput");
