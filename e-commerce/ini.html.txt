@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <title>Configurazione E-commerce - Progetto Scuola</title>
+    <style>
+        body { font-family: sans-serif; background-color: #f0f0f0; padding: 30px; }
+        .box { background: white; padding: 20px; border: 1px solid #ccc; max-width: 500px; margin: 0 auto; }
+        h2 { color: #333; }
+        .campo { margin-bottom: 15px; }
+        label { display: block; margin-bottom: 5px; font-weight: bold; }
+        input[type="text"] { width: 100%; padding: 5px; }
+        button { background: green; color: white; padding: 10px; border: none; cursor: pointer; width: 100%; }
+    </style>
+</head>
+<body>
+
+<div class="box">
+    <h2>Pannello di Configurazione (ini.html)</h2>
+    <p>Inserisci i dati per configurare il negozio del venditore.</p>
+    <hr><br>
+
+    <div class="campo">
+        <label>Scegli il file CSV dei prodotti:</label>
+        <input type="file" id="fileCsv" accept=".csv">
+    </div>
+
+    <div class="campo">
+        <label>Inserisci il percorso del file CSS (opzionale):</label>
+        <input type="text" id="percorsoCss" placeholder="esempio: stile-pc.css">
+    </div>
+
+    <button onclick="salvaTutto()">Salva Impostazioni e Vai al Negozio</button>
+</div>
+
+<script>
+function salvaTutto() {
+    var inputInput = document.getElementById('fileCsv');
+    var inputCss = document.getElementById('percorsoCss').value;
+
+    // Controllo se il file è stato inserito
+    if (inputInput.files.length == 0) {
+        alert("Errore: Devi selezionare un file CSV!");
+        return;
+    }
+
+    var file = inputInput.files[0];
+    var lettore = new FileReader();
+
+    // Leggo il file di testo
+    lettore.onload = function(evento) {
+        var contenutoCsv = evento.target.result;
+        
+        // Salvo nel localStorage così l'altra pagina può leggerlo
+        localStorage.setItem('dati_csv', contenutoCsv);
+        
+        if(inputCss != "") {
+            localStorage.setItem('foglio_css', inputCss);
+        } else {
+            localStorage.setItem('foglio_css', 'default.css');
+        }
+
+        alert("Impostazioni salvate! Adesso ti sposto al sito.");
+        window.location.href = 'index.html'; // Cambio pagina
+    };
+
+    lettore.readAsText(file);
+}
+</script>
+
+</body>
+</html>

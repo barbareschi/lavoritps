@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Il Mio E-Commerce - Quarta Superiore</title>
+    
+    <!-- CSS Strutturale per farlo responsive con le regole base -->
+    <style>
+        body { font-family: Arial, sans-serif; margin: 10px; background-color: #fafafa; }
+        header { background-color: #333; color: white; padding: 15px; text-align: center; margin-bottom: 20px; }
+        
+        .principale { display: flex; flex-wrap: wrap; }
+        .colonna-prodotti { flex: 70%; padding: 10px; }
+        .colonna-carrello { flex: 30%; padding: 10px; background: #eee; border: 1px solid #ccc; height: max-content; }
+        
+        /* Griglia che cambia in base allo schermo */
+        .griglia { display: flex; flex-wrap: wrap; gap: 15px; }
+        .scheda-prodotto { background: white; border: 1px solid #ddd; width: 200px; padding: 10px; text-align: center; }
+        .scheda-prodotto img { max-width: 100%; height: 120px; object-fit: cover; }
+        .prezzo { color: red; font-weight: bold; font-size: 1.2em; margin: 10px 0; }
+        
+        button { cursor: pointer; padding: 5px 10px; margin: 2px; }
+        .btn-compra { background-color: blue; color: white; border: none; width: 100%; padding: 8px; }
+        .btn-pdf { background-color: orange; font-size: 1.1em; width: 100%; padding: 10px; margin-top: 15px; }
+
+        /* Pagina singola per visualizzare le caratteristiche */
+        .schermata-dettaglio { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: white; padding: 30px; box-sizing: border-box; }
+        .info-box { display: flex; gap: 30px; margin-top: 20px; }
+        .info-box img { max-width: 300px; }
+    </style>
+
+    <!-- CARICAMENTO DEL CSS DINAMICO SCELTO NELL'INI.HTML -->
+    <script>
+        var cssScelto = localStorage.getItem('ecommerce_css_url');
+        if (cssScelto && cssScelto !== 'default.css') {
+            var linkTag = document.createElement('link');
+            linkTag.rel = 'stylesheet';
+            linkTag.href = cssScelto;
+            document.head.appendChild(linkTag);
+        }
+    </script>
+</head>
+<body>
+
+<header>
+    <h1>💻 PC Componenti Store 💻</h1>
+    <p>Piattaforma Universale Client-Side - <a href="ini.html" style="color: yellow;">Torna a ini.html</a></p>
+</header>
+
+<div class="principale">
+    
+    <!-- Zona sinistra con la lista dei prodotti -->
+    <div class="colonna-prodotti">
+        <h2>Catalogo Prodotti</h2>
+        <br>
+        <div class="griglia" id="spazioProdotti">
+            <!-- Qui dentro il JavaScript metterà i prodotti del CSV -->
+        </div>
+    </div>
+
+    <!-- Zona destra con il Basket (Carrello) -->
+    <div class="colonna-carrello">
+        <h2>Il Tuo Basket 🛒</h2>
+        <br>
+        <div id="elementiCarrello">
+            <p>Nessun oggetto nel carrello.</p>
+        </div>
+        <hr>
+        <h3>Totale Spesa: €<span id="prezzoTotale">0.00</span></h3>
+        <button class="btn-pdf" id="bottoneStampa" onclick="generaRicevutaPDF()" disabled>Stampa Ricevuta PDF</button>
+    </div>
+
+</div>
+
+<!-- PAGINA DEDICATA PER LE CARATTERISTICHE (si sovrappone quando clicchi) -->
+<div id="paginaDettaglio" class="schermata-dettaglio">
+    <button onclick="chiudiSchermataDettaglio()" style="font-size: 1.1em; padding: 10px;">← Indietro al Catalogo</button>
+    <div id="contenutoDettaglio">
+        <!-- Riempito via JS -->
+    </div>
+</div>
+
+
+<!-- LIBRERIA PER STAMPARE IL PDF (jsPDF presa da CDN) -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+<script>
+// Array globali per salvare i dati
+var listaProdotti = [];
+var carrello = [];
+
+// Funzione che parte appena carica la pagina
+window.onload = function() {
+    var stringaCsv = localStorage.getItem('dati_csv');
+    
+    if (stringaCsv == null) {
+        document.getElementById('spazioProdotti').innerHTML = "<h3>Attenzione: non hai caricato nessun file CSV da ini.html!</h3>";
+        return;
+    }
+
+    faiParsingDelCsv(stringaCsv);
+    disegnaProdottiSuSchermo();
+};
+
+// Funzione scolastica per fare il parsing del testo CSV
+function faiParsingDelCsv(testoCompleto) {
+    var righe = testoCompleto.split('\n');
+    // La riga 0 contiene le intestazioni (marca,modello,ecc...)
+    var intestazioni = righe[0].trim().split(',');
+
+    // Parto da i=1 per saltare la prima riga di intestazione
+    for (var i = 1; i < righe.length; i++) {
+        var rigaCorrente = righe[i].trim();
+        if (rigaCorrente == "") continue; // Salta le righe vuote
+
+        var colonne = rigaCorrente.split(',');
+
+        // Creo l'oggetto del prodotto
+        var prod = {
+            id: i - 1,
+            marca: colonne[0],
+            modello: colonne[1],
+            descrizione: colonne[2],
+            immagine: colonne[3],
+            prezzo: parseFloat(colonne[4])
+        };
+        listaProdotti.push(prod);
+    }
+}
+
+// Funzione che genera la grafica replicabile per ogni elemento
+function disegnaProdottiSuSchermo() {
+    var divContenitore = document.getElementById('spazioProdotti');
+    divContenitore.innerHTML = ""; // Pulisco tutto
+
+    for (var i = 0; i < listaProdotti.length; i++) {
+        var p = listaProdotti[i];
+        
+        // Creo il box del prodotto singolo
+        var box = document.createElement('div');
+        box.className = "scheda-prodotto";
+        box.innerHTML = `
+            <img src="${p.immagine}">
+            <h3>${p.marca}</h3>
+            <p>${p.modello}</p>
+            <div class="prezzo">€${p.prezzo.toFixed(2)}</div>
+            <button class="btn-compra" onclick="mettiNelCarrello(${p.id})">Aggiungi</button>
+            <button onclick="apriDettagliOggetto(${p.id})">Vedi Scheda</button>
+        `;
+        divContenitore.appendChild(box);
+    }
+}
+
+// Funzione per la pagina dedicata alle caratteristiche dell'oggetto
+function apriDettagliOggetto(idCercato) {
+    // Cerco il prodotto nell'array usando un ciclo for classico
+    var prod = null;
+    for(var i=0; i<listaProdotti.length; i++) {
+        if(listaProdotti[i].id == idCercato) {
+            var prod = listaProdotti[i];
+        }
+    }
+
+    var contenitore = document.getElementById('contenutoDettaglio');
+    contenitore.innerHTML = `
+        <div class="info-box">
+            <div>
+                <img src="${prod.immagine}" style="width:100%; max-width:400px; border: 1px solid #ccc;">
+            </div>
+            <div>
+                <h1>${prod.marca} - ${prod.modello}</h1>
+                <p style="font-size: 1.3em; margin: 20px 0; color: #555;"><strong>Specifiche:</strong> ${prod.descrizione}</p>
+                <h2 style="color: green;">Prezzo di listino: €${prod.prezzo.toFixed(2)}</h2>
+                <br><br>
+                <button class="btn-compra" style="width: auto; padding: 15px 30px; font-size: 1.1em;" onclick="mettiNelCarrello(${prod.id}); chiudiSchermataDettaglio();">Metti nel carrello ed esci</button>
+            </div>
+        </div>
+    `;
+
+    document.getElementById('paginaDettaglio').style.display = 'block';
+}
+
+function chiudiSchermataDettaglio() {
+    document.getElementById('paginaDettaglio').style.display = 'none';
+}
+
+// Funzione per gestire il riempimento del Basket
+function mettiNelCarrello(idCercato) {
+    var p = null;
+    for(var i=0; i<listaProdotti.length; i++) {
+        if(listaProdotti[i].id == idCercato) { p = listaProdotti[i]; }
+    }
+
+    // Controllo se c'è già nel carrello per aumentare la quantità
+    var trovato = false;
+    for (var j = 0; j < carrello.length; j++) {
+        if (carrello[j].prodotto.id == idCercato) {
+            carrello[j].quantita++;
+            trovato = true;
+        }
+    }
+
+    // Se non c'è lo aggiungo come elemento nuovo
+    if (trovato == false) {
+        carrello.push({ prodotto: p, quantita: 1 });
+    }
+
+    aggiornaGraficaCarrello();
+}
+
+function rimuoviDalCarrello(idCercato) {
+    // Filtro l'array togliendo l'elemento
+    var nuovoCarrello = [];
+    for(var i=0; i<carrello.length; i++) {
+        if(carrello[i].prodotto.id != idCercato) {
+            nuovoCarrello.push(carrello[i]);
+        }
+    }
+    carrello = nuovoCarrello;
+    aggiornaGraficaCarrello();
+}
+
+function aggiornaGraficaCarrello() {
+    var divCarrello = document.getElementById('elementiCarrello');
+    var spanTotale = document.getElementById('prezzoTotale');
+    var btnStampa = document.getElementById('bottoneStampa');
+
+    if (carrello.length == 0) {
+        divCarrello.innerHTML = "<p>Nessun oggetto nel carrello.</p>";
+        spanTotale.innerText = "0.00";
+        btnStampa.disabled = true;
+        return;
+    }
+
+    divCarrello.innerHTML = "";
+    var totaleSomma = 0;
+
+    for (var i = 0; i < carrello.length; i++) {
+        var item = carrello[i];
+        var costoParziale = item.prodotto.prezzo * item.quantita;
+        totaleSomma = totaleSomma + costoParziale;
+
+        var rigaItem = document.createElement('div');
+        rigaItem.style.marginBottom = "10px";
+        rigaItem.innerHTML = `
+            <strong>${item.prodotto.marca}</strong> - ${item.prodotto.modello} <br>
+            ${item.quantita}x €${item.prodotto.prezzo.toFixed(2)} = <b>€${costoParziale.toFixed(2)}</b>
+            <button onclick="rimuoviDalCarrello(${item.prodotto.id})" style="color:red; float:right;">X</button>
+            <div style="clear:both;"></div>
+        `;
+        divCarrello.appendChild(rigaItem);
+    }
+
+    spanTotale.innerText = totaleSomma.toFixed(2);
+    btnStampa.disabled = false; // Attivo il bottone per fare il PDF
+}
+
+// Funzione finale per stampare il PDF online usando jsPDF
+function generaRicevutaPDF() {
+    // Inizializzo jsPDF come da documentazione della libreria
+    var { jsPDF } = window.jspdf;
+    var doc = new jsPDF();
+
+    // Scrittura dei testi sul foglio PDF (coordinate X, Y)
+    doc.setFontSize(20);
+    doc.text("RICEVUTA DEL PROCESSO DI ACQUISTO", 20, 20);
+    
+    doc.setFontSize(12);
+    doc.text("E-commerce Universale - Progetto scolastico di Informatica", 20, 30);
+    doc.text("Data di acquisto: " + new Date().toLocaleDateString(), 20, 37);
+    doc.text("------------------------------------------------------------------------------------------", 20, 43);
+
+    var altezzaY = 55;
+    var sommaFinale = 0;
+
+    doc.text("Articolo", 20, altezzaY);
+    doc.text("Q.ta", 120, altezzaY);
+    doc.text("Prezzo Unitario", 140, altezzaY);
+    doc.text("Subtotale", 175, altezzaY);
+    doc.text("------------------------------------------------------------------------------------------", 20, altezzaY+5);
+    
+    altezzaY = altezzaY + 15;
+
+    // Ciclo for per scrivere i prodotti acquistati dentro il PDF
+    for (var i = 0; i < carrello.length; i++) {
+        var item = carrello[i];
+        var sub = item.prodotto.prezzo * item.quantita;
+        sommaFinale = sommaFinale + sub;
+
+        var testoProdotto = item.prodotto.marca + " " + item.prodotto.modello;
+
+        doc.text(testoProdotto, 20, altezzaY);
+        doc.text(item.quantita.toString(), 122, altezzaY);
+        doc.text("€" + item.prodotto.prezzo.toFixed(2), 140, altezzaY);
+        doc.text("€" + sub.toFixed(2), 175, altezzaY);
+
+        altezzaY = altezzaY + 10;
+    }
+
+    doc.text("------------------------------------------------------------------------------------------", 20, altezzaY);
+    altezzaY = altezzaY + 10;
+
+    doc.setFontSize(14);
+    doc.text("TOTALE DA PAGARE: €" + sommaFinale.toFixed(2), 115, altezzaY);
+
+    // Faccio scaricare il PDF al browser
+    doc.save("ricevuta_carrello_pc.pdf");
+
+    // Messaggio di conferma e azzeramento del basket
+    alert("Grazie per aver acquistato! Il file PDF è stato generato e scaricato.");
+    carrello = [];
+    aggiornaGraficaCarrello();
+}
+</script>
+
+</body>
+</html>
