@@ -4,14 +4,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>NEO-Tech Store - Catalogo Hardware</title>
+    <!-- Inclusione della libreria jsPDF del file originale -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.4.1/jspdf.debug.js" crossorigin="anonymous"></script>
     <!-- Font moderno e pulito (Inter) per una resa visiva nettamente superiore -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     
     <style>
-       
+        /* Nuova Estetica Tech / Gaming */
         body { 
-            background-color: #121824; 
+            background-color: #121824; /* Grigio antracite scuro di sfondo */
             font-family: 'Inter', sans-serif; 
             padding: 30px; 
             color: #f8fafc; 
@@ -21,12 +22,12 @@
         h2 {
             font-size: 26px;
             font-weight: 700;
-            color: #0284c7;
+            color: #0284c7; /* Azzurro/Blu Hi-tech */
             margin-bottom: 20px;
             letter-spacing: -0.5px;
         }
 
-     
+        /* Area Caricamento CSV Stilizzata */
         .upload-container {
             background: #1e293b;
             padding: 20px;
@@ -49,7 +50,7 @@
             font-size: 14px;
         }
 
-    
+        /* Contenitore Griglia Prodotti */
         #contenitore { 
             display: grid; 
             grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); 
@@ -57,7 +58,7 @@
             margin-bottom: 40px;
         }
 
-       
+        /* Schede Prodotto Moderne */
         .blocco { 
             background: #ffffff; 
             border: 1px solid #e2e8f0; 
@@ -96,7 +97,7 @@
             color: #0f172a;
         }
 
-        
+        /* Pulsanti Stilizzati */
         button { 
             cursor: pointer; 
             width: 100%; 
@@ -109,7 +110,7 @@
             transition: all 0.2s ease;
         }
 
-        
+        /* Pulsante Dettagli (Principale) */
         .blocco button:nth-of-type(1) {
             background: #0284c7;
             color: white;
@@ -118,7 +119,7 @@
             background: #0369a1;
         }
 
-       
+        /* Pulsante Aggiungi (Secondario) */
         .blocco button:nth-of-type(2) {
             background: #f1f5f9;
             color: #334155;
@@ -128,7 +129,7 @@
             background: #e2e8f0;
         }
 
-        
+        /* Area Carrello Elegante */
         #area-carrello { 
             background: #1e293b; 
             color: #f8fafc; 
@@ -153,7 +154,7 @@
             padding: 10px;
             border-radius: 8px;
             margin: 8px 0;
-            border-left: 4px solid #ef4444; 
+            border-left: 4px solid #ef4444; /* Dettaglio rosso tech */
         }
 
         #area-carrello hr {
@@ -162,7 +163,7 @@
             margin: 20px 0;
         }
 
-        
+        /* Finestra Modale dei Dettagli */
         .info-box { 
             display: none; 
             position: fixed; 
@@ -209,10 +210,10 @@
 
 <div id="contenitore"></div>
 
-
+<!-- Finestra Dettagli Modale -->
 <div id="finestra" class="info-box"></div>
 
-
+<!-- Interfaccia del Carrello -->
 <div id="area-carrello">
     <h3>Carrello</h3>
     <div id="lista-carrello"></div>
@@ -223,7 +224,6 @@
 </div>
 
 <script>
-
 var elenco_prod = [];
 var carrello = [];
 
@@ -237,7 +237,7 @@ document.getElementById("inputDati").addEventListener("change", function(e){
     lettore.readAsText(e.target.files[0]);
 });
 
-
+// Funzione ricorsiva originale per il parsing del CSV
 function carica_dati(righe, i){
     if(i >= righe.length){
         disegna_tutto(0);
@@ -256,7 +256,7 @@ function carica_dati(righe, i){
     carica_dati(righe, i + 1);
 }
 
-
+// Funzione ricorsiva originale per la renderizzazione delle card dei prodotti hardware
 function disegna_tutto(pos){
     if(pos >= elenco_prod.length) return;
     
@@ -274,7 +274,7 @@ function disegna_tutto(pos){
     disegna_tutto(pos + 1);
 }
 
-
+// Funzione per mostrare i dettagli nella finestra pop-up
 function apri(id){
     var f = document.getElementById("finestra");
     f.style.display = "block";
@@ -288,7 +288,7 @@ function metti_nel_carrello(id){
     carrello.push(elenco_prod[id]);
 }
 
-
+// NUOVA FUNZIONE CALCOLA TOTALE AGGIORNATA (Risolve il problema dello 0€)
 function calcola_totale(n, tot, stringa){
     if(n >= carrello.length){
         document.getElementById("lista-carrello").innerHTML = stringa;
@@ -297,13 +297,22 @@ function calcola_totale(n, tot, stringa){
         return;
     }
     
-    var p = parseFloat(carrello[n].pr.replace(",", "."));
+    // Rimuove spazi vuoti nascosti e converte la virgola in punto decimale
+    var prezzoPulito = carrello[n].pr.replace(",", ".").trim();
+    var p = parseFloat(prezzoPulito);
+    
+    // Se la conversione fallisce, usa 0 per sicurezza evitando blocchi nel totale
+    if (isNaN(p)) {
+        p = 0;
+    }
+    
     var riga = "<p>"+carrello[n].m+" "+carrello[n].mo+" - "+carrello[n].pr+" €</p>";
     
+    // Prosegue con il calcolo ricorsivo
     calcola_totale(n + 1, tot + p, stringa + riga);
 }
 
-
+// Funzioni originali per l'esportazione PDF tramite jsPDF
 function genera_pdf_jspdf(){
     var doc = new jsPDF();
     doc.text("RICEVUTA D'ACQUISTO - NEO-TECH STORE", 15, 20);
