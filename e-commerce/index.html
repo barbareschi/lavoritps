@@ -3,344 +3,331 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>eCommerce - Hardware & Componenti PC</title>
-    <!-- Font moderno e pulito (Inter) per un look professionale -->
+    <title>NEO-Tech Store - Catalogo Hardware</title>
+    <!-- Inclusione della libreria jsPDF del file originale -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.4.1/jspdf.debug.js" crossorigin="anonymous"></script>
+    <!-- Font moderno e pulito (Inter) per una resa visiva nettamente superiore -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
     <style>
-        /* Nuovi stili globali - Stile Tech Chiaro e Moderno */
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: #f4f6f9; /* Grigio chiarissimo pulito */
-            color: #1e293b; /* Testo scuro ma non nero pieno */
+        /* Nuova Estetica Tech / Gaming */
+        body { 
+            background-color: #121824; /* Grigio antracite scuro di sfondo */
+            font-family: 'Inter', sans-serif; 
+            padding: 30px; 
+            color: #f8fafc; 
             margin: 0;
-            padding: 0;
-            display: flex;
-            flex-direction: column;
-            min-height: 100vh;
         }
 
-        /* Intestazione elegante */
-        header {
-            background-color: #ffffff; /* Sfondo bianco */
-            color: #1e293b;
-            padding: 15px 40px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05); /* Ombra leggera sotto l'header */
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        header h1 {
-            margin: 0;
-            font-size: 24px;
+        h2 {
+            font-size: 26px;
             font-weight: 700;
-            color: #0284c7; /* Blu Hi-Tech brillante */
+            color: #0284c7; /* Azzurro/Blu Hi-tech */
+            margin-bottom: 20px;
             letter-spacing: -0.5px;
         }
 
-        /* Pulsanti moderni arrotondati */
-        button {
-            background-color: #0284c7; /* Blu principale */
-            color: white;
-            padding: 10px 18px;
-            border: none;
-            border-radius: 8px; /* Più arrotondati */
-            cursor: pointer;
-            font-size: 14px;
-            font-weight: 500;
-            margin-left: 10px;
-            transition: all 0.2s ease;
-            box-shadow: 0 2px 4px rgba(2, 132, 199, 0.2);
-        }
-
-        button:hover {
-            background-color: #0369a1; /* Blu più scuro */
-            transform: translateY(-1px); /* Effetto sollevamento */
-            box-shadow: 0 4px 8px rgba(2, 132, 199, 0.3);
-        }
-
-        /* Pulsante secondario grigio per l'uscita */
-        .btn-logout {
-            background-color: #f1f5f9;
-            color: #64748b;
-            box-shadow: none;
-        }
-        .btn-logout:hover {
-            background-color: #e2e8f0;
-            color: #334155;
-            box-shadow: none;
-        }
-
-        /* Input file nascosto con stile personalizzato */
-        .file-upload-wrapper {
-            margin: 20px auto;
-            background: white;
-            padding: 15px;
-            border-radius: 12px;
-            display: inline-block;
-            border: 2px dashed #cbd5e1;
-        }
-
-        /* Griglia dei prodotti migliorata */
-        .product-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-            gap: 25px;
-            padding: 30px;
-            max-width: 1300px;
-            margin: 0 auto;
-            flex-grow: 1;
-            width: 100%;
-            box-sizing: border-box;
-        }
-
-        /* Scheda Prodotto stile Minimal/Store di lusso */
-        .product {
-            background-color: #ffffff;
+        /* Area Caricamento CSV Stilizzata */
+        .upload-container {
+            background: #1e293b;
             padding: 20px;
-            border-radius: 16px; /* Molto arrotondato */
-            border: 1px solid #e2e8f0;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            border-radius: 12px;
+            border: 1px solid #334155;
+            display: inline-block;
+            margin-bottom: 30px;
+        }
+
+        .upload-container label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: 500;
+            color: #94a3b8;
+            font-size: 14px;
+        }
+
+        input[type="file"] {
+            color: #94a3b8;
+            font-size: 14px;
+        }
+
+        /* Contenitore Griglia Prodotti */
+        #contenitore { 
+            display: grid; 
+            grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); 
+            gap: 25px; 
+            margin-bottom: 40px;
+        }
+
+        /* Schede Prodotto Moderne */
+        .blocco { 
+            background: #ffffff; 
+            border: 1px solid #e2e8f0; 
+            border-radius: 16px; 
+            padding: 20px; 
+            color: #1e293b; 
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06); 
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.3s;
             display: flex;
             flex-direction: column;
             justify-content: space-between;
-            text-align: left; /* Allineamento a sinistra più ordinato */
-            cursor: pointer;
         }
 
-        .product:hover {
-            transform: translateY(-6px);
-            box-shadow: 0 12px 20px -3px rgba(0, 0, 0, 0.08);
+        .blocco:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.2);
             border-color: #bae6fd;
         }
 
-        .product img {
-            width: 100%;
-            height: 180px;
-            object-fit: contain; /* Adatto ai componenti PC senza tagliarli */
-            background-color: #f8fafc; /* Sfondo grigio chiaro per l'immagine */
-            border-radius: 10px;
-            margin-bottom: 15px;
+        .blocco img { 
+            width: 100%; 
+            height: 140px; 
+            object-fit: contain; 
+            background-color: #f8fafc;
+            border-radius: 8px;
+            margin-bottom: 15px; 
         }
 
-        .product h3 {
-            font-size: 16px;
-            font-weight: 600;
-            color: #0f172a;
-            margin: 0 0 8px 0;
-            line-height: 1.4;
-            height: 44px; /* Altezza fissa per allineare i box */
-            overflow: hidden;
-        }
-
-        .product .price {
-            font-weight: 700;
-            color: #0284c7;
-            font-size: 20px;
-            margin: 10px 0;
-        }
-
-        .product button {
-            margin-left: 0;
-            width: 100%;
-            padding: 12px;
-        }
-
-        /* Footer Moderno */
-        #footer-info {
-            background-color: #0f172a; /* Blu notte scuro per il footer */
-            color: #94a3b8;
-            padding: 50px 20px 20px 20px;
-            margin-top: 40px;
-        }
-
-        #about-us {
-            background-color: #1e293b;
-            color: #f8fafc;
-            padding: 30px;
-            border-radius: 12px;
-            width: 85%;
-            max-width: 800px;
-            margin: 0 auto 30px auto;
-            text-align: center;
-            border: 1px solid #334155;
-        }
-
-        #about-us h2 {
-            font-size: 24px;
-            color: #fff;
-            margin-bottom: 10px;
-            font-weight: 600;
-        }
-
-        footer p {
-            font-size: 13px;
+        .blocco p {
             margin: 5px 0;
-        }
-
-        /* Link di login */
-        .registration-link {
-            position: fixed;
-            bottom: 25px;
-            right: 25px;
             font-size: 14px;
-            background: #ffffff;
-            padding: 10px 16px;
-            border-radius: 30px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        .blocco p b {
+            font-size: 16px;
+            color: #0f172a;
+        }
+
+        /* Pulsanti Stilizzati */
+        button { 
+            cursor: pointer; 
+            width: 100%; 
+            margin-top: 8px; 
+            padding: 10px; 
+            font-weight: 600; 
+            font-size: 14px;
+            border: none;
+            border-radius: 8px;
+            transition: all 0.2s ease;
+        }
+
+        /* Pulsante Dettagli (Principale) */
+        .blocco button:nth-of-type(1) {
+            background: #0284c7;
+            color: white;
+        }
+        .blocco button:nth-of-type(1):hover {
+            background: #0369a1;
+        }
+
+        /* Pulsante Aggiungi (Secondario) */
+        .blocco button:nth-of-type(2) {
+            background: #f1f5f9;
+            color: #334155;
+            border: 1px solid #cbd5e1;
+        }
+        .blocco button:nth-of-type(2):hover {
+            background: #e2e8f0;
+        }
+
+        /* Area Carrello Elegante */
+        #area-carrello { 
+            background: #1e293b; 
+            color: #f8fafc; 
+            padding: 25px; 
+            margin-top: 40px; 
+            border-radius: 16px; 
+            border: 1px solid #334155; 
+            max-width: 600px;
+        }
+
+        #area-carrello h3 {
+            margin-top: 0;
+            font-size: 20px;
             color: #0284c7;
-            text-decoration: none;
-            font-weight: 600;
-            border: 1px solid #e2e8f0;
-            transition: all 0.2s;
+            border-bottom: 1px solid #334155;
+            padding-bottom: 10px;
         }
 
-        .registration-link:hover {
-            background: #f8fafc;
-            color: #0369a1;
+        #lista-carrello p {
+            font-size: 14px;
+            background: #111827;
+            padding: 10px;
+            border-radius: 8px;
+            margin: 8px 0;
+            border-left: 4px solid #ef4444; /* Dettaglio rosso tech */
         }
 
-        .clear-btn {
-            background-color: #ef4444; /* Rosso solo per il reset */
-            box-shadow: 0 2px 4px rgba(239, 68, 68, 0.2);
-            margin: 20px auto;
+        #area-carrello hr {
+            border: 0;
+            border-top: 1px solid #334155;
+            margin: 20px 0;
         }
-        .clear-btn:hover {
-            background-color: #dc2626;
-            box-shadow: 0 4px 8px rgba(239, 68, 68, 0.3);
+
+        /* Finestra Modale dei Dettagli */
+        .info-box { 
+            display: none; 
+            position: fixed; 
+            top: 50%; 
+            left: 50%; 
+            transform: translate(-50%, -50%);
+            width: 80%;
+            max-width: 500px;
+            background: #ffffff; 
+            color: #1e293b; 
+            padding: 30px; 
+            border-radius: 16px;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.5);
+            z-index: 99; 
+        }
+
+        .info-box h2 {
+            color: #0f172a;
+            margin-top: 0;
+        }
+
+        .info-box p {
+            font-size: 15px;
+            line-height: 1.5;
+            color: #475569;
+        }
+
+        .info-box .modal-close-btn {
+            background: #ef4444;
+            color: white;
+            margin-top: 20px;
+        }
+        .info-box .modal-close-btn:hover {
+            background: #dc2626;
         }
     </style>
 </head>
 <body>
 
-<!-- Intestazione della pagina -->
-<header>
-    <h1>NEO-Tech Store</h1>
-    <div>
-        <button onclick="window.location.href='carrello.html'">Carrello</button>
-        <button onclick="window.location.href='contatti.html'">Contattaci</button>
-        <button class="btn-logout" onclick="logout()">Esci</button>
-    </div>
-</header>
+<div class="upload-container">
+    <label for="inputDati">Carica Catalogo Componenti (.csv)</label>
+    <input type="file" id="inputDati" accept=".csv">
+</div>
 
-<main>
-    <!-- Griglia per la visualizzazione dei prodotti -->
-    <div id="product-list" class="product-grid"></div>
-    
-    <!-- Area Caricamento file stilizzata -->
-    <div class="file-upload-wrapper">
-        <label style="display:block; margin-bottom:8px; font-weight:500; font-size:14px; color:#64748b;">Carica catalogo JSON:</label>
-        <input type="file" id="jsonFileInput" accept=".json" />
-    </div>
-    <br>
-    <button class="clear-btn" onclick="clearSavedProducts()">Svuota Prodotti</button>
-</main>
+<div id="contenitore"></div>
 
-<!-- Sezione Footer con informazioni -->
-<section id="footer-info">
-    <div id="about-us">
-        <h2>Chi Siamo</h2>
-        <p>Benvenuti su NEO-Tech Store! Siamo il punto di riferimento per i veri appassionati di assemblaggio PC. Offriamo solo i migliori componenti hardware per garantire stabilità, frame-rate mostruosi e massime prestazioni.</p>
-    </div>
-    <footer>
-        <p>&copy; 2026 NEO-Tech Store - Tutti i diritti riservati</p>
-        <p style="color: #64748b;">Informazioni legali | Termini e condizioni</p>
-    </footer>
-</section>
+<!-- Finestra Dettagli Modale -->
+<div id="finestra" class="info-box"></div>
 
-<!-- Link per il login -->
-<a href="login.html" class="registration-link" id="loginLink">Login</a>
+<!-- Interfaccia del Carrello -->
+<div id="area-carrello">
+    <h3>Carrello</h3>
+    <div id="lista-carrello"></div>
+    <hr>
+    <p style="font-size: 18px;"><b>Totale: <span id="euro" style="color: #ef4444;">0</span> €</b></p>
+    <button onclick="calcola_totale(0,0,'')" style="background:#22c55e; color:white; font-size:15px;">Calcola Totale</button>
+    <button id="btn-stampa" onclick="genera_pdf_jspdf()" style="background:#3b82f6; color:white; margin-top:12px; display:none; font-size:15px;">Procedi all'Acquisto (Genera PDF)</button>
+</div>
 
 <script>
-    // [La logica JavaScript sotto rimane identica alla versione precedente]
-    document.addEventListener("DOMContentLoaded", function () {
-        const user = JSON.parse(localStorage.getItem('loggedInUser'));
-        const loginLink = document.getElementById('loginLink');
+// Mantengo intatta tutta la logica di memorizzazione e le funzioni ricorsive originali
+var elenco_prod = [];
+var carrello = [];
 
-        if (user) {
-            loginLink.textContent = `Benvenuto, ${user.username}`;
-            loginLink.href = "#";
-            loginLink.addEventListener('click', logout);
-        } else {
-            loginLink.textContent = 'Login';
-        }
-    });
+document.getElementById("inputDati").addEventListener("change", function(e){
+    var lettore = new FileReader();
+    lettore.onload = function(evento){
+        var testo = evento.target.result;
+        var righe = testo.replace(/\r/g, "").split("\n");
+        carica_dati(righe, 1); 
+    };
+    lettore.readAsText(e.target.files[0]);
+});
 
-    function logout() {
-        localStorage.removeItem('loggedInUser');
-        location.reload();
+// Funzione ricorsiva originale per il parsing del CSV
+function carica_dati(righe, i){
+    if(i >= righe.length){
+        disegna_tutto(0);
+        return;
     }
-
-    document.addEventListener("DOMContentLoaded", function () {
-        const fileInput = document.getElementById("jsonFileInput");
-        const productList = document.getElementById("product-list");
-
-        const savedProducts = localStorage.getItem("productList");
-        if (savedProducts) {
-            try {
-                const products = JSON.parse(savedProducts);
-                displayProducts(products);
-            } catch (error) {
-                console.error("Errore nel parsing del JSON:", error);
-            }
-        }
-
-        fileInput.addEventListener("change", function (event) {
-            const file = event.target.files[0];
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = function (e) {
-                    try {
-                        const products = JSON.parse(e.target.result);
-                        localStorage.setItem("productList", JSON.stringify(products));
-                        displayProducts(products);
-                    } catch (error) {
-                        console.error("Errore nel parsing del JSON:", error);
-                    }
-                };
-                reader.readAsText(file);
-            }
+    var colonne = righe[i].split(";");
+    if(colonne.length >= 5 && colonne[0] != ""){
+        elenco_prod.push({
+            m: colonne[0].trim(),
+            mo: colonne[1].trim(),
+            de: colonne[2].trim(),
+            im: colonne[3].trim(),
+            pr: colonne[4].trim()
         });
+    }
+    carica_dati(righe, i + 1);
+}
 
-        function displayProducts(products) {
-            productList.innerHTML = "";
-            products.forEach(product => {
-                const productElement = document.createElement("div");
-                productElement.classList.add("product");
-                productElement.innerHTML = `
-                    <img src="${product.image}" alt="${product.name}">
-                    <h3>${product.name}</h3>
-                    <div class="price">${product.price}</div>
-                    <button class="add-to-cart-btn">Aggiungi al Carrello</button>
-                `;
+// Funzione ricorsiva originale per la renderizzazione delle card dei prodotti hardware
+function disegna_tutto(pos){
+    if(pos >= elenco_prod.length) return;
+    
+    var cont = document.getElementById("contenitore");
+    var div = document.createElement("div");
+    div.className = "blocco";
+    
+    div.innerHTML = "<img src='"+elenco_prod[pos].im+"'>" +
+                    "<p><b>"+elenco_prod[pos].m+"</b></p>" +
+                    "<p>"+elenco_prod[pos].mo+"</p>" +
+                    "<button onclick='apri("+pos+")'>Dettagli</button>" +
+                    "<button onclick='metti_nel_carrello("+pos+")'>Aggiungi</button>";
+    
+    cont.appendChild(div);
+    disegna_tutto(pos + 1);
+}
 
-                productElement.querySelector('.add-to-cart-btn').addEventListener('click', (e) => {
-                    e.stopPropagation(); 
-                    addToCart(product);
-                });
+// Funzione per mostrare i dettagli nella finestra pop-up con la nuova classe css per il tasto chiudi
+function apri(id){
+    var f = document.getElementById("finestra");
+    f.style.display = "block";
+    f.innerHTML = "<h2>"+elenco_prod[id].m+" "+elenco_prod[id].mo+"</h2>" +
+                  "<p>"+elenco_prod[id].de+"</p>" +
+                  "<p style='font-weight:bold; font-size:18px; color:#0284c7;'>Prezzo: "+elenco_prod[id].pr+" €</p>" +
+                  "<button class='modal-close-btn' onclick='this.parentElement.style.display=\"none\"'>Chiudi</button>";
+}
 
-                productElement.addEventListener("click", () => {
-                    localStorage.setItem("selectedProduct", JSON.stringify(product));
-                    window.location.href = "prodotto.html"; 
-                });
+function metti_nel_carrello(id){
+    carrello.push(elenco_prod[id]);
+}
 
-                productList.appendChild(productElement);
-            });
-        }
+// Funzione ricorsiva originale per il calcolo del totale
+function calcola_totale(n, tot, stringa){
+    if(n >= carrello.length){
+        document.getElementById("lista-carrello").innerHTML = stringa;
+        document.getElementById("euro").innerText = tot.toFixed(2);
+        document.getElementById("btn-stampa").style.display = "block";
+        return;
+    }
+    
+    var p = parseFloat(carrello[n].pr.replace(",", "."));
+    var riga = "<p>"+carrello[n].m+" "+carrello[n].mo+" - "+carrello[n].pr+" €</p>";
+    
+    calcola_totale(n + 1, tot + p, stringa + riga);
+}
 
-        function addToCart(product) {
-            let cart = JSON.parse(localStorage.getItem("cart")) || [];
-            cart.push(product);
-            localStorage.setItem("cart", JSON.stringify(cart));
-            alert(product.name + " aggiunto al carrello!");
-        }
+// Funzioni originali per l'esportazione PDF tramite jsPDF
+function genera_pdf_jspdf(){
+    var doc = new jsPDF();
+    doc.text("RICEVUTA D'ACQUISTO - NEO-TECH STORE", 15, 20);
+    doc.text("-----------------------------------------", 15, 27);
+    
+    scrivi_righe_pdf(doc, 0, 35);
+}
 
-        window.clearSavedProducts = function () {
-            localStorage.removeItem("productList");
-            location.reload();
-        };
-    });
+function scrivi_righe_pdf(doc, n, y){
+    if(n >= carrello.length){
+        var totale = document.getElementById("euro").innerText;
+        doc.text("-----------------------------------------", 15, y);
+        doc.text("Totale: " + totale + " EUR", 15, y + 10);
+        doc.save("ricevuta_acquisto.pdf");
+        return;
+    }
+    
+    var rigaTesto = carrello[n].m + " " + carrello[n].mo + " - " + carrello[n].pr + " EUR";
+    doc.text(rigaTesto, 15, y);
+    
+    scrivi_righe_pdf(doc, n + 1, y + 10);
+}
 </script>
+
 </body>
 </html>
