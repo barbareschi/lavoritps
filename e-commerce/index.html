@@ -4,197 +4,276 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>NEO-Tech Store - Catalogo Hardware</title>
-    <!-- Inclusione della libreria jsPDF del file originale -->
+   
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.4.1/jspdf.debug.js" crossorigin="anonymous"></script>
-    <!-- Font moderno e pulito (Inter) per una resa visiva nettamente superiore -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
     
     <style>
-        /* Nuova Estetica Tech / Gaming */
+       
         body { 
-            background-color: #121824; /* Grigio antracite scuro di sfondo */
-            font-family: 'Inter', sans-serif; 
-            padding: 30px; 
+            background: radial-gradient(circle at top center, #1e293b 0%, #0f172a 100%);
+            font-family: 'Plus Jakarta Sans', sans-serif; 
+            padding: 40px; 
             color: #f8fafc; 
             margin: 0;
+            min-height: 100vh;
+        }
+
+       
+        .store-header {
+            max-width: 1200px;
+            margin: 0 auto 40px auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 20px;
         }
 
         h2 {
-            font-size: 26px;
+            font-size: 28px;
             font-weight: 700;
-            color: #0284c7; /* Azzurro/Blu Hi-tech */
-            margin-bottom: 20px;
+            background: linear-gradient(to right, #38bdf8, #0369a1);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin: 0;
             letter-spacing: -0.5px;
         }
 
-        /* Area Caricamento CSV Stilizzata */
+        
         .upload-container {
-            background: #1e293b;
-            padding: 20px;
+            background: rgba(30, 41, 59, 0.7);
+            backdrop-filter: blur(8px);
+            padding: 12px 20px;
             border-radius: 12px;
-            border: 1px solid #334155;
-            display: inline-block;
-            margin-bottom: 30px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            align-items: center;
+            gap: 15px;
         }
 
         .upload-container label {
-            display: block;
-            margin-bottom: 10px;
             font-weight: 500;
             color: #94a3b8;
             font-size: 14px;
         }
 
         input[type="file"] {
-            color: #94a3b8;
+            color: #38bdf8;
             font-size: 14px;
+            cursor: pointer;
         }
 
-        /* Contenitore Griglia Prodotti */
+        
         #contenitore { 
             display: grid; 
-            grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); 
-            gap: 25px; 
-            margin-bottom: 40px;
+            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); 
+            gap: 30px; 
+            max-width: 1200px;
+            margin: 0 auto 50px auto;
         }
 
-        /* Schede Prodotto Moderne */
+       
         .blocco { 
             background: #ffffff; 
-            border: 1px solid #e2e8f0; 
-            border-radius: 16px; 
-            padding: 20px; 
-            color: #1e293b; 
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06); 
-            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.3s;
+            border: 1px solid #f1f5f9; 
+            border-radius: 20px; 
+            padding: 24px; 
+            color: #0f172a; 
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3); 
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             display: flex;
             flex-direction: column;
             justify-content: space-between;
+            position: relative;
         }
 
         .blocco:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.2);
-            border-color: #bae6fd;
+            transform: translateY(-8px);
+            box-shadow: 0 20px 30px -10px rgba(56, 189, 248, 0.2);
+            border-color: #e0f2fe;
         }
 
+       
         .blocco img { 
             width: 100%; 
-            height: 140px; 
+            height: 150px; 
             object-fit: contain; 
-            background-color: #f8fafc;
-            border-radius: 8px;
-            margin-bottom: 15px; 
+            background: radial-gradient(circle, #f8fafc 0%, #f1f5f9 100%);
+            border-radius: 14px;
+            margin-bottom: 20px; 
+            transition: transform 0.3s ease;
+        }
+
+        .blocco:hover img {
+            transform: scale(1.03);
+        }
+
+        .product-info {
+            margin-bottom: 20px;
         }
 
         .blocco p {
-            margin: 5px 0;
-            font-size: 14px;
+            margin: 4px 0;
         }
 
         .blocco p b {
-            font-size: 16px;
+            font-size: 18px;
             color: #0f172a;
+            letter-spacing: -0.3px;
+            display: block;
+            margin-bottom: 2px;
         }
 
-        /* Pulsanti Stilizzati */
+        .product-model {
+            color: #64748b;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+       
         button { 
             cursor: pointer; 
             width: 100%; 
-            margin-top: 8px; 
-            padding: 10px; 
+            padding: 12px; 
             font-weight: 600; 
             font-size: 14px;
             border: none;
-            border-radius: 8px;
-            transition: all 0.2s ease;
+            border-radius: 10px;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
-        /* Pulsante Dettagli (Principale) */
+        
         .blocco button:nth-of-type(1) {
-            background: #0284c7;
+            background: #0f172a;
             color: white;
+            margin-bottom: 8px;
         }
         .blocco button:nth-of-type(1):hover {
-            background: #0369a1;
+            background: #334155;
         }
 
-        /* Pulsante Aggiungi (Secondario) */
+  
         .blocco button:nth-of-type(2) {
-            background: #f1f5f9;
-            color: #334155;
-            border: 1px solid #cbd5e1;
+            background: #f0fdf4;
+            color: #16a34a;
+            border: 1px solid #bbf7d0;
         }
         .blocco button:nth-of-type(2):hover {
-            background: #e2e8f0;
+            background: #dcfce7;
+            transform: scale(1.02);
         }
 
-        /* Area Carrello Elegante */
+        
         #area-carrello { 
-            background: #1e293b; 
+            background: rgba(30, 41, 59, 0.4);
+            backdrop-filter: blur(12px);
             color: #f8fafc; 
-            padding: 25px; 
-            margin-top: 40px; 
-            border-radius: 16px; 
-            border: 1px solid #334155; 
+            padding: 30px; 
+            border-radius: 24px; 
+            border: 1px solid rgba(255, 255, 255, 0.08); 
             max-width: 600px;
+            margin: 0 auto;
+            box-shadow: 0 20px 40px -15px rgba(0,0,0,0.5);
         }
 
         #area-carrello h3 {
             margin-top: 0;
-            font-size: 20px;
-            color: #0284c7;
-            border-bottom: 1px solid #334155;
-            padding-bottom: 10px;
+            font-size: 22px;
+            font-weight: 700;
+            color: #38bdf8;
+            letter-spacing: -0.5px;
         }
 
+       
         #lista-carrello p {
             font-size: 14px;
-            background: #111827;
-            padding: 10px;
-            border-radius: 8px;
-            margin: 8px 0;
-            border-left: 4px solid #ef4444; /* Dettaglio rosso tech */
+            background: rgba(15, 23, 42, 0.6);
+            padding: 12px 16px;
+            border-radius: 12px;
+            margin: 10px 0;
+            border-left: 4px solid #38bdf8;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
 
         #area-carrello hr {
             border: 0;
-            border-top: 1px solid #334155;
-            margin: 20px 0;
+            border-top: 1px solid rgba(255, 255, 255, 0.08);
+            margin: 25px 0;
         }
 
-        /* Finestra Modale dei Dettagli */
+        .total-wrapper {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 20px;
+            margin-bottom: 20px;
+        }
+
+       
+        .btn-calc {
+            background: linear-gradient(135deg, #16a34a 0%, #15803d 100%);
+            color: white;
+            font-size: 15px;
+            box-shadow: 0 4px 12px rgba(22, 163, 74, 0.2);
+        }
+        .btn-calc:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(22, 163, 74, 0.3);
+        }
+
+       
+        .btn-pdf {
+            background: linear-gradient(135deg, #38bdf8 0%, #0284c7 100%);
+            color: white;
+            margin-top: 14px;
+            font-size: 15px;
+            box-shadow: 0 4px 12px rgba(56, 189, 248, 0.2);
+        }
+        .btn-pdf:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(56, 189, 248, 0.3);
+        }
+
+       
         .info-box { 
             display: none; 
             position: fixed; 
             top: 50%; 
             left: 50%; 
             transform: translate(-50%, -50%);
-            width: 80%;
-            max-width: 500px;
+            width: 90%;
+            max-width: 460px;
             background: #ffffff; 
-            color: #1e293b; 
-            padding: 30px; 
-            border-radius: 16px;
-            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.5);
+            color: #0f172a; 
+            padding: 35px; 
+            border-radius: 24px;
+            box-shadow: 0 30px 60px -15px rgba(0, 0, 0, 0.6);
             z-index: 99; 
+            border: 1px solid #f1f5f9;
         }
 
         .info-box h2 {
+            background: none;
+            -webkit-text-fill-color: initial;
             color: #0f172a;
-            margin-top: 0;
+            font-size: 24px;
+            margin-bottom: 12px;
         }
 
         .info-box p {
             font-size: 15px;
-            line-height: 1.5;
+            line-height: 1.6;
             color: #475569;
+            margin-bottom: 20px;
         }
 
         .info-box .modal-close-btn {
             background: #ef4444;
             color: white;
-            margin-top: 20px;
         }
         .info-box .modal-close-btn:hover {
             background: #dc2626;
@@ -203,27 +282,34 @@
 </head>
 <body>
 
-<div class="upload-container">
-    <label for="inputDati">Carica Catalogo Componenti (.csv)</label>
-    <input type="file" id="inputDati" accept=".csv">
+<div class="store-header">
+    <h2>NEO-Tech Store</h2>
+    <div class="upload-container">
+        <label for="inputDati">Catalogo Componenti</label>
+        <input type="file" id="inputDati" accept=".csv">
+    </div>
 </div>
 
 <div id="contenitore"></div>
 
-<!-- Finestra Dettagli Modale -->
+
 <div id="finestra" class="info-box"></div>
 
-<!-- Interfaccia del Carrello -->
+
 <div id="area-carrello">
     <h3>Carrello</h3>
     <div id="lista-carrello"></div>
     <hr>
-    <p style="font-size: 18px;"><b>Totale: <span id="euro" style="color: #ef4444;">0</span> €</b></p>
-    <button onclick="calcola_totale(0,0,'')" style="background:#22c55e; color:white; font-size:15px;">Calcola Totale</button>
-    <button id="btn-stampa" onclick="genera_pdf_jspdf()" style="background:#3b82f6; color:white; margin-top:12px; display:none; font-size:15px;">Procedi all'Acquisto (Genera PDF)</button>
+    <div class="total-wrapper">
+        <span>Totale da saldare:</span>
+        <b><span id="euro" style="color: #38bdf8; font-size: 24px;">0.00</span> €</b>
+    </div>
+    <button class="btn-calc" onclick="calcola_totale(0,0,'')">Calcola Totale</button>
+    <button id="btn-stampa" class="btn-pdf" onclick="genera_pdf_jspdf()" style="display:none;">Procedi all'Acquisto (Genera PDF)</button>
 </div>
 
 <script>
+
 var elenco_prod = [];
 var carrello = [];
 
@@ -237,7 +323,6 @@ document.getElementById("inputDati").addEventListener("change", function(e){
     lettore.readAsText(e.target.files[0]);
 });
 
-// Funzione ricorsiva originale per il parsing del CSV
 function carica_dati(righe, i){
     if(i >= righe.length){
         disegna_tutto(0);
@@ -256,7 +341,6 @@ function carica_dati(righe, i){
     carica_dati(righe, i + 1);
 }
 
-// Funzione ricorsiva originale per la renderizzazione delle card dei prodotti hardware
 function disegna_tutto(pos){
     if(pos >= elenco_prod.length) return;
     
@@ -265,30 +349,32 @@ function disegna_tutto(pos){
     div.className = "blocco";
     
     div.innerHTML = "<img src='"+elenco_prod[pos].im+"'>" +
+                    "<div class='product-info'>" +
                     "<p><b>"+elenco_prod[pos].m+"</b></p>" +
-                    "<p>"+elenco_prod[pos].mo+"</p>" +
+                    "<p class='product-model'>"+elenco_prod[pos].mo+"</p>" +
+                    "</div>" +
+                    "<div>" +
                     "<button onclick='apri("+pos+")'>Dettagli</button>" +
-                    "<button onclick='metti_nel_carrello("+pos+")'>Aggiungi</button>";
+                    "<button onclick='metti_nel_carrello("+pos+")'>Aggiungi</button>" +
+                    "</div>";
     
     cont.appendChild(div);
     disegna_tutto(pos + 1);
 }
 
-// Funzione per mostrare i dettagli nella finestra pop-up
 function apri(id){
     var f = document.getElementById("finestra");
     f.style.display = "block";
     f.innerHTML = "<h2>"+elenco_prod[id].m+" "+elenco_prod[id].mo+"</h2>" +
                   "<p>"+elenco_prod[id].de+"</p>" +
-                  "<p style='font-weight:bold; font-size:18px; color:#0284c7;'>Prezzo: "+elenco_prod[id].pr+" €</p>" +
-                  "<button class='modal-close-btn' onclick='this.parentElement.style.display=\"none\"'>Chiudi</button>";
+                  "<p style='font-weight:700; font-size:20px; color:#0284c7; margin-bottom:20px;'>Prezzo: "+elenco_prod[id].pr+" €</p>" +
+                  "<button class='modal-close-btn' onclick='this.parentElement.style.display=\"none\"'>Chiudi Finestra</button>";
 }
 
 function metti_nel_carrello(id){
     carrello.push(elenco_prod[id]);
 }
 
-// NUOVA FUNZIONE CALCOLA TOTALE AGGIORNATA (Risolve il problema dello 0€)
 function calcola_totale(n, tot, stringa){
     if(n >= carrello.length){
         document.getElementById("lista-carrello").innerHTML = stringa;
@@ -297,27 +383,23 @@ function calcola_totale(n, tot, stringa){
         return;
     }
     
-    // Rimuove spazi vuoti nascosti e converte la virgola in punto decimale
     var prezzoPulito = carrello[n].pr.replace(",", ".").trim();
     var p = parseFloat(prezzoPulito);
     
-    // Se la conversione fallisce, usa 0 per sicurezza evitando blocchi nel totale
     if (isNaN(p)) {
         p = 0;
     }
     
-    var riga = "<p>"+carrello[n].m+" "+carrello[n].mo+" - "+carrello[n].pr+" €</p>";
+   
+    var riga = "<p><span>"+carrello[n].m+" "+carrello[n].mo+"</span> <b style='color:#38bdf8'>"+carrello[n].pr+" €</b></p>";
     
-    // Prosegue con il calcolo ricorsivo
     calcola_totale(n + 1, tot + p, stringa + riga);
 }
 
-// Funzioni originali per l'esportazione PDF tramite jsPDF
 function genera_pdf_jspdf(){
     var doc = new jsPDF();
     doc.text("RICEVUTA D'ACQUISTO - NEO-TECH STORE", 15, 20);
     doc.text("-----------------------------------------", 15, 27);
-    
     scrivi_righe_pdf(doc, 0, 35);
 }
 
@@ -332,7 +414,6 @@ function scrivi_righe_pdf(doc, n, y){
     
     var rigaTesto = carrello[n].m + " " + carrello[n].mo + " - " + carrello[n].pr + " EUR";
     doc.text(rigaTesto, 15, y);
-    
     scrivi_righe_pdf(doc, n + 1, y + 10);
 }
 </script>
