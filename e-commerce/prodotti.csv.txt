@@ -1,5 +1,0 @@
-marca,modello,descrizione,immagine,prezzo
-Intel,Core i5-13400F,Processore ottimo per gaming economico 10 core,https://images.unsplash.com/photo-1518770660439-4636190af475?w=500,210.00
-Nvidia,RTX 4060 Ti,Scheda video adatta per giocare in Full HD a dettagli alti,https://images.unsplash.com/photo-1591488320449-011701bb6704?w=500,430.00
-Kingston,Fury 16GB DDR4,Memoria RAM veloce per PC fissi desktop,https://images.unsplash.com/photo-1541029071515-84cc54f84dc5?w=500,55.00
-Crucial,P3 1TB SSD,Disco a stato solido velocissimo di tipo NVMe,https://images.unsplash.com/photo-1562976540-1502c2145186?w=500,75.00
